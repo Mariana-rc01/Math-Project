@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,600,600italic");
 
 /*
-	@ajlkn
-	Free for personal and commercial use under the CCA 3.0 license
+	Arcana by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
 
 html, body, div, span, applet, object,
@@ -1994,6 +1995,11 @@ input, select, textarea {
 		footer.major {
 			padding-top: 3em;
 		}
+
+		div.centered {
+			text-align: center;
+		}
+
 
 /* Form */
 
