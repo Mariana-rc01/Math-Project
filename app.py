@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import numpy as np
 import matplotlib.pyplot as plt
 import mpld3
+from seno import calcular_seno, plotar_grafico_seno
 
 app = Flask(__name__, static_folder='static')
 
@@ -9,29 +10,32 @@ app = Flask(__name__, static_folder='static')
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index.html')
 def index():
+    #Valores pré-definidos:
+    amplitude = 1.0
+    frequencia = 3.0
+    fase = 0.0
+    pontos = 100
+
+    x, y = calcular_seno(amplitude, frequencia, fase, pontos)
+    html_graph = plotar_grafico_seno(x, y)
+
     if request.method == 'POST':
         amplitude = float(request.form['amplitude'])
         frequencia = float(request.form['frequencia'])
         fase = float(request.form['fase'])
         pontos = int(request.form['pontos'])
 
-        # Geração dos pontos da função seno
-        x = np.linspace(0, 2 * np.pi, pontos)
-        y = amplitude * np.sin(frequencia * x + fase)
+        # Chamar a função calcular_seno para obter os pontos x e y
+        x, y = calcular_seno(amplitude, frequencia, fase, pontos)
 
-        # Plotagem do gráfico
-        fig, ax = plt.subplots()
-        ax.plot(x, y)
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_title('Gráfico da Função Seno')
+        # Chamar a função plotar_grafico_seno para obter o gráfico em HTML
+        html_graph = plotar_grafico_seno(x, y)
 
-        # Converter o gráfico para um formato interativo HTML
-        html_graph = mpld3.fig_to_html(fig)
+        return render_template('index.html', graph_data=html_graph,
+                               amplitude=amplitude, frequencia=frequencia, fase=fase, pontos=pontos)
 
-        return render_template('index.html', graph_data=html_graph)
-
-    return render_template('index.html', graph_data=None)
+    return render_template('index.html', graph_data=html_graph,
+                               amplitude=amplitude, frequencia=frequencia, fase=fase, pontos=pontos)
 
 
 @app.route('/analise.html')
