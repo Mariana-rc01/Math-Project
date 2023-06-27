@@ -188,6 +188,20 @@ input, select, textarea {
 		margin: 0 auto;
 		max-width: 100%;
 		width: 1400px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.graph-section {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		justify-content: center;
+	}
+
+	.options {
+		margin-left: 20px;
 	}
 
 		@media screen and (max-width: 1680px) {
@@ -2736,6 +2750,12 @@ input, select, textarea {
 	#footer {
 		padding: 4em 0 8em 0;
 		background-color: #c5cdd4;
+		text-align: center; /* Centralizar o conteúdo horizontalmente */
+	}
+
+	#footer .links {
+		text-align: left; /* Alinhar o texto do rodapé à esquerda */
+		margin-left: 6em; /* Adicionar um pequeno recuo para a esquerda */
 	}
 
 		#footer a {
@@ -2750,6 +2770,8 @@ input, select, textarea {
 
 		#footer .container {
 			margin-bottom: 4em;
+			display: flex;
+			justify-content: center;
 		}
 
 		#footer .icons {
