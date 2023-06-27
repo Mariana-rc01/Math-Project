@@ -62,5 +62,45 @@ def analise5():
 def analise6():
     return render_template('analise6.html')
 
+@app.route('/probabilidades.html')
+def probabilidades():
+    return render_template('probabilidades.html')
+
+@app.route('/probabilidades1.html')
+def probabilidades1():
+    return render_template('probabilidades1.html')
+
+@app.route('/probabilidades1-1.html')
+def probabilidades1_1():
+    return render_template('probabilidades1-1.html')
+
+@app.route('/probabilidades1-2.html')
+def probabilidades1_2():
+    return render_template('probabilidades1-2.html')
+
+@app.route('/probabilidades1-3.html')
+def probabilidades1_3():
+    return render_template('probabilidades1-3.html')
+
+@app.route('/probabilidades2.html')
+def probabilidades2():
+    return render_template('probabilidades2.html')
+
+@app.route('/probabilidades3.html')
+def probabilidades3():
+    return render_template('probabilidades3.html')
+
+@app.route('/probabilidades3-1.html')
+def probabilidades3_1():
+    return render_template('probabilidades3-1.html')
+
+@app.route('/probabilidades3-2.html')
+def probabilidades3_2():
+    return render_template('probabilidades3-2.html')
+
+@app.route('/probabilidades3-3.html')
+def probabilidades3_3():
+    return render_template('probabilidades3-3.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port = 3141)
