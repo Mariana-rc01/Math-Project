@@ -7,6 +7,7 @@ app = Flask(__name__, static_folder='static')
 
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/index.html')
 def index():
     if request.method == 'POST':
         amplitude = float(request.form['amplitude'])
@@ -31,6 +32,35 @@ def index():
         return render_template('index.html', graph_data=html_graph)
 
     return render_template('index.html', graph_data=None)
+
+
+@app.route('/analise.html')
+def analise():
+    return render_template('analise.html')
+
+@app.route('/analise1.html')
+def analise1():
+    return render_template('analise1.html')
+
+@app.route('/analise2.html')
+def analise2():
+    return render_template('analise2.html')
+
+@app.route('/analise3.html')
+def analise3():
+    return render_template('analise3.html')
+
+@app.route('/analise4.html')
+def analise4():
+    return render_template('analise4.html')
+
+@app.route('/analise5.html')
+def analise5():
+    return render_template('analise5.html')
+
+@app.route('/analise6.html')
+def analise6():
+    return render_template('analise6.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port = 3141)

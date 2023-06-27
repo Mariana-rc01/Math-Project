@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Math project</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -97,9 +98,8 @@
 					</div>
 				</section>
 
-			<!-- Footer -->
-			<div id="footer">
-				<div class="container">
+				<!-- Footer -->
+				<div id="footer">
 					<div class="row">
 						<section class="col-3 col-6-narrower col-12-mobilep">
 							<h3>Links to Stuff</h3>
@@ -109,24 +109,23 @@
 								<li><a href="http://www.math.uminho.pt/">Departamento de Matemática</a></li>
 							</ul>
 						</section>
-					</div>
 				</div>
-					<!-- Copyright -->
-					<div class="copyright centered">
-						<ul class="menu">
-							<li>&copy; Untitled. All rights reserved</li><li>Design based on: <a href="http://html5up.net">HTML5 UP</a></li>
-						</ul>
-					</div>
+				<!-- Copyright -->
+				<div class="copyright centered">
+					<ul class="menu">
+						<li>&copy; Untitled. All rights reserved</li><li>Design based on: <a href="http://html5up.net">HTML5 UP</a></li>
+					</ul>
+				</div>
 			</div>
-		</div>
+	</div>
 
 		<!-- Scripts -->
-		<script src="assets/js/jquery.min.js"></script>
-		<script src="assets/js/jquery.dropotron.min.js"></script>
-		<script src="assets/js/browser.min.js"></script>
-		<script src="assets/js/breakpoints.min.js"></script>
-		<script src="assets/js/util.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/jquery.dropotron.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 	</body>
 </html>
