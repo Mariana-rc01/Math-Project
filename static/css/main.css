@@ -2747,12 +2747,6 @@ input, select, textarea {
 	#footer {
 		padding: 4em 0 8em 0;
 		background-color: #c5cdd4;
-		text-align: center; /* Centralizar o conteúdo horizontalmente */
-	}
-
-	#footer .links {
-		text-align: left; /* Alinhar o texto do rodapé à esquerda */
-		margin-left: 6em; /* Adicionar um pequeno recuo para a esquerda */
 	}
 
 		#footer a {
@@ -2764,12 +2758,6 @@ input, select, textarea {
 				color: #17a3df;
 				border-bottom-color: transparent;
 			}
-
-		#footer .container {
-			margin-bottom: 4em;
-			display: flex;
-			justify-content: center;
-		}
 
 		#footer .icons {
 			text-align: center;
@@ -3128,14 +3116,14 @@ input, select, textarea {
 			}
 
 				#navPanel .link {
-					border-bottom: 0;
+					border-bottom: 0 !important;
 					border-top: solid 1px rgba(255, 255, 255, 0.05);
 					color: #888;
 					display: block;
 					height: 48px;
 					line-height: 48px;
 					padding: 0 1em 0 1em;
-					text-decoration: none;
+					text-decoration: none !important;
 				}
 
 					#navPanel .link:first-child {
