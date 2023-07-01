@@ -106,5 +106,9 @@ def probabilidades3_2():
 def probabilidades3_3():
     return render_template('probabilidades3-3.html')
 
+@app.route('/algebra.html')
+def algebra():
+    return render_template('algebra.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port = 3141)
