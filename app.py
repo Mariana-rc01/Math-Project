@@ -3,12 +3,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mpld3
 from seno import calcular_seno, plotar_grafico_seno
+from analiseP6 import coordenadas_esfericas
 
 app = Flask(__name__, static_folder='static')
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index.html')
+@app.route('/index.html', methods=['GET', 'POST'])
 def index():
     #Valores pré-definidos:
     amplitude = 1.0
