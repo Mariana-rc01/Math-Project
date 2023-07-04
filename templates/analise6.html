@@ -4,6 +4,7 @@
 		<title>Math project</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -92,6 +93,19 @@
 										<p>Breve explicação.</p>
 
 									</article>
+									<div id="graphDiv">
+									<div id="text">
+										<script src="{{ url_for('static', filename='js/analiseP6.js') }}"></script>
+										<script>
+											// Definir as coordenadas iniciais do ponto P
+											let theta_p = 0;
+											let phi_p = 0;
+
+											// Criar as coordenadas esféricas
+											coordenadas_esfericas(theta_p, phi_p);
+										</script>
+									</div>
+									</div>
 
 								</div>
 							</div>
