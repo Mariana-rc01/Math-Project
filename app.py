@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import mpld3
 from seno import calcular_seno, plotar_grafico_seno
-from analiseP6 import coordenadas_esfericas
 
 app = Flask(__name__, static_folder='static')
 
