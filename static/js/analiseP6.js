@@ -50,9 +50,9 @@ function coordenadas_esfericas(theta_p, phi_p) {
   const point = {
     type: 'scatter3d',
     mode: 'markers',
-    x: [],
-    y: [],
-    z: [],
+    x: [0],
+    y: [0],
+    z: [0],
     marker: {
       color: 'red',
       size: 5,
@@ -74,20 +74,10 @@ function coordenadas_esfericas(theta_p, phi_p) {
     margin: { l: 0, r: 0, t: 0, b: 0 },
   };
 
-  // Função para atualizar a posição do ponto P
-  function updatePoint(eventData) {
-    const { key } = eventData;
+  let animationFrameId;
 
-    if (key === 'ArrowUp') {
-      phi_p += 0.1;
-    } else if (key === 'ArrowDown') {
-      phi_p -= 0.1;
-    } else if (key === 'ArrowRight') {
-      theta_p += 0.1;
-    } else if (key === 'ArrowLeft') {
-      theta_p -= 0.1;
-    }
-
+  // Função para atualizar a posição do ponto P suavemente
+  function updatePointSmooth() {
     // Atualizar as coordenadas do ponto P
     const x_p = r * Math.sin(phi_p) * Math.cos(theta_p);
     const y_p = r * Math.sin(phi_p) * Math.sin(theta_p);
@@ -103,12 +93,78 @@ function coordenadas_esfericas(theta_p, phi_p) {
     document.getElementById('text').innerHTML = text;
 
     Plotly.redraw('graphDiv');
+
+    // Chamar a próxima atualização de forma suave
+    animationFrameId = requestAnimationFrame(updatePointSmooth);
+  }
+
+  // Função para atualizar a posição do ponto P com base nas coordenadas theta e phi
+  function updatePointPosition(theta, phi) {
+    theta_p = theta;
+    phi_p = phi;
+  }
+
+  // Função para atualizar a posição do ponto P
+  function updatePoint(eventData) {
+    const { key } = eventData;
+
+    if (key === 'ArrowUp') {
+      phi_p += 0.1;
+    } else if (key === 'ArrowDown') {
+      phi_p -= 0.1;
+    } else if (key === 'ArrowRight') {
+      theta_p += 0.1;
+    } else if (key === 'ArrowLeft') {
+      theta_p -= 0.1;
+    }
+
+    updatePointPosition(theta_p, phi_p);
   }
 
   // Configurar o evento de teclado para atualizar o ponto P
   document.addEventListener('keydown', updatePoint);
 
+  // Configurar os eventos de rato para arrastar o ponto P
+  const graphDiv = document.getElementById('graphDiv');
+  let isDragging = false;
+  graphDiv.addEventListener('mousedown', startDrag);
+  graphDiv.addEventListener('mousemove', dragPoint);
+  graphDiv.addEventListener('mouseup', stopDrag);
+  graphDiv.addEventListener('mouseleave', stopDrag);
+
+  let startX, startY;
+
+  function startDrag(event) {
+    isDragging = true;
+    startX = event.clientX;
+    startY = event.clientY;
+  }
+
+  function dragPoint(event) {
+    if (isDragging) {
+      const deltaX = event.clientX - startX;
+      const deltaY = event.clientY - startY;
+
+      const sensitivity = 0.01;
+      theta_p += sensitivity * deltaX;
+      phi_p -= sensitivity * deltaY;
+
+      startX = event.clientX;
+      startY = event.clientY;
+    }
+  }
+
+  function stopDrag() {
+    isDragging = false;
+  }
+
   // Criar a figura
   const data = [sphereSurface, sphereWireframe, point];
   Plotly.newPlot('graphDiv', data, layout);
+
+  // Iniciar a atualização suave do ponto P
+  updatePointSmooth();
+
+  // Atualizar a posição inicial do ponto P
+  updatePointPosition(theta_p, phi_p);
 }
