@@ -3,8 +3,7 @@
 	<head>
 		<title>Math project</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<link rel="stylesheet" href="static/css/main.css"/>
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -22,12 +21,12 @@
 								<li>
 									<a href="analise.html">Analysis</a>
 									<ul>
-										<li><a href="analise1.html">Contour Line</a></li>
+										<li class="current"><a href="analise1.html">Contour Line</a></li>
 										<li><a href="analise2.html">Derivative vs Tangent Space</a></li>
 										<li><a href="analise3.html">Gradient</a></li>
 										<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 										<li><a href="analise5.html">Darboux sums</a></li>
-										<li class="current"><a href="analise6.html">Spherical Coordinates</a></li>
+										<li><a href="analise6.html">Spherical Coordinates</a></li>
 									</ul>
 								</li>
 								<li>
@@ -84,28 +83,15 @@
 
 									<!-- Content -->
 
-									<article>
-										<header>
-											<h2>Spherical Coordinates</h2>
-											<p>Enunciado do problema.</p>
-										</header>
+										<article>
+											<header>
+												<h2>Contour Line</h2>
+												<p>Enunciado do problema.</p>
+											</header>
 
-										<p>Breve explicação.</p>
+											<p>Breve explicação.</p>
 
-									</article>
-									<div id="graphDiv">
-									<div id="text">
-										<script src="{{ url_for('static', filename='js/analiseP6.js') }}"></script>
-										<script>
-											// Definir as coordenadas iniciais do ponto P
-											let theta_p = 0;
-											let phi_p = 0;
-
-											// Criar as coordenadas esféricas
-											coordenadas_esfericas(theta_p, phi_p);
-										</script>
-									</div>
-									</div>
+										</article>
 
 								</div>
 							</div>
@@ -118,7 +104,7 @@
 				<div class="container">
 					<div class="row">
 						<section class="col-5 col-8-narrower col-15-mobilep">
-							<h3>Links to Stuff</h3>
+							<h3>Links</h3>
 							<ul class="links">
 								<li><a href="https://www.uminho.pt/PT">UMinho</a></li>
 								<li><a href="https://www.ecum.uminho.pt/pt">Escola de Ciências</a></li>
@@ -129,59 +115,59 @@
 					</div>
 				</div>
 
-				<!-- Icons -->
-				<div style="display: flex; justify-content: center; margin-left: 550px;">
-					<table>
-						<tr>
-							<td>
-								<a href='http://www.uminho.pt/default.aspx' target="_blank">
-									<img src="/static/images/escolas/um.gif"
-									alt="Universidade do Minho" style="width: 70px;">
-								</a>
-								<a target="_blank" href='http://www.ecum.uminho.pt'>
-									<img src="/static/images/escolas/220.gif"
-									alt="Escola de Ciências" style="width: 70px;">
-								</a>
-							</td>
-							<td>
-								<a href='https://erasmus-plus.ec.europa.eu/' target="_blank">
-									<img src="/static/images/erasmus.png" alt=""
-									style="width: 232px;">
-								</a>
-								<a href='https://agence.erasmusplus.fr/en/' target="_blank">
-									<img src="/static/images/erasmusfrance.png" alt=""
-									style="width: 200px; margin-right: 500px;">
-								</a>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p style="font-size: smaller; margin: 0;">
-									<a href='http://www.uminho.pt/default.aspx'>Universidade do Minho</a>
-									<br>
-									<a href='http://www.math.uminho.pt/'>Departamento de Matemática</a>
-								</p>
-							</td>
-						</tr>
-					</table>
-				</div>
+					<!-- Icons -->
+					<div style="display: flex; justify-content: center; margin-left: 550px;">
+						<table>
+							<tr>
+								<td>
+									<a href='http://www.uminho.pt/default.aspx' target="_blank">
+										<img src="static/images/escolas/um.gif"
+										alt="Universidade do Minho" style="width: 70px;">
+									</a>
+									<a target="_blank" href='http://www.ecum.uminho.pt'>
+										<img src="static/images/escolas/220.gif"
+										alt="Escola de Ciências" style="width: 70px;">
+									</a>
+								</td>
+								<td>
+									<a href='https://erasmus-plus.ec.europa.eu/' target="_blank">
+										<img src="static/images/erasmus.png" alt=""
+										style="width: 232px;">
+									</a>
+									<a href='https://agence.erasmusplus.fr/en/' target="_blank">
+										<img src="static/images/erasmusfrance.png" alt=""
+										style="width: 200px; margin-right: 500px;">
+									</a>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p style="font-size: smaller; margin: 0;">
+										<a href='http://www.uminho.pt/default.aspx'>Universidade do Minho</a>
+										<br>
+										<a href='http://www.math.uminho.pt/'>Departamento de Matemática</a>
+									</p>
+								</td>
+							</tr>
+						</table>
+					</div>
 
-				<!-- Copyright -->
-				<div class="copyright centered">
-					<ul class="menu">
-						<li>&copy; Untitled. All rights reserved</li><li>Design based on: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
+					<!-- Copyright -->
+					<div class="copyright centered">
+						<ul class="menu">
+							<li>&copy; Untitled. All rights reserved</li><li>Design based on: <a href="http://html5up.net">HTML5 UP</a></li>
+						</ul>
+					</div>
 				</div>
-			</div>
-	</div>
+		</div>
 
 		<!-- Scripts -->
-		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/jquery.dropotron.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		<script src="static/js/jquery.min.js"></script>
+		<script src="static/js/jquery.dropotron.min.js"></script>
+		<script src="static/js/browser.min.js"></script>
+		<script src="static/js/breakpoints.min.js"></script>
+		<script src="static/js/util.js"></script>
+		<script src="static/js/main.js"></script>
 
 	</body>
 </html>

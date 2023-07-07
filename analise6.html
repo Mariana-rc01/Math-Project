@@ -3,10 +3,11 @@
 	<head>
 		<title>Math project</title>
 		<meta charset="utf-8" />
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+		<link rel="stylesheet" href="static/css/main.css"/>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	</head>
 	<body>
-		<div>
+		<div id="page-wrapper">
 
 			<!-- Header -->
 				<div id="header">
@@ -17,7 +18,7 @@
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li class="current"><a href="index.html">Home</a></li>
+								<li><a href="index.html">Home</a></li>
 								<li>
 									<a href="analise.html">Analysis</a>
 									<ul>
@@ -26,7 +27,7 @@
 										<li><a href="analise3.html">Gradient</a></li>
 										<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 										<li><a href="analise5.html">Darboux sums</a></li>
-										<li><a href="analise6.html">Spherical Coordinates</a></li>
+										<li class="current"><a href="analise6.html">Spherical Coordinates</a></li>
 									</ul>
 								</li>
 								<li>
@@ -56,58 +57,77 @@
 						</nav>
 				</div>
 
-				<section class="wrapper style2">
+			<!-- Main -->
+				<section class="wrapper style1">
 					<div class="container">
-							<header class="major">
-									<h2>Breve introdução do site</h2>
-									<p>Pequenino subtitulo</p>
-							</header>
-					</div>
+						<div class="row gtr-200">
+							<div class="col-4 col-12-narrower">
+								<div id="sidebar">
 
-					<div class="graph-section">
-							<div class="options">
-									<h1>Gráfico Seno</h1>
+									<!-- Sidebar -->
+										<section>
+											<h3>Problems</h3>
+											<ul class="links">
+												<li><a href="analise1.html">Contour Line</a></li>
+												<li><a href="analise2.html">Derivative vs Tangent Space</a></li>
+												<li><a href="analise3.html">Gradient</a></li>
+												<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
+												<li><a href="analise5.html">Darboux sums</a></li>
+												<li><a href="analise6.html">Spherical Coordinates</a></li>
+											</ul>
+										</section>
 
-									<form action="/" method="POST">
-										<label for="amplitude">Amplitude:</label>
-										<input type="number" step="any" id="amplitude" name="amplitude" value="{{ amplitude }}" required><br>
-
-										<label for="frequencia">Frequência:</label>
-										<input type="number" step="any" id="frequencia" name="frequencia" value="{{ frequencia }}" required><br>
-
-										<label for="fase">Fase:</label>
-										<input type="number" step="any" id="fase" name="fase" value="{{ fase }}" required><br>
-
-										<label for="pontos">Pontos:</label>
-										<input type="number" id="pontos" name="pontos" value="{{ pontos }}" required><br>
-
-										<input type="submit" value="Gerar Gráfico">
-								</form>
+								</div>
 							</div>
+							<div class="col-8  col-12-narrower imp-narrower">
+								<div id="content">
 
-							<div class="graph-container">
-									{% if graph_data %}
-											<div id="graph">{{ graph_data | safe }}</div>
-									{% endif %}
+									<!-- Content -->
+
+									<article>
+										<header>
+											<h2>Spherical Coordinates</h2>
+											<p>Enunciado do problema.</p>
+										</header>
+
+										<p>Breve explicação.</p>
+
+									</article>
+									<div id="graphDiv">
+									<div id="text">
+										<script src="static/js/analiseP6.js"></script>
+										<script>
+											// Definir as coordenadas iniciais do ponto P
+											let theta_p = 0;
+											let phi_p = 0;
+
+											// Criar as coordenadas esféricas
+											coordenadas_esfericas(theta_p, phi_p);
+										</script>
+									</div>
+									</div>
+
+								</div>
 							</div>
-					</div>
-			</section>
-
-			<!-- Footer -->
-				<div id="footer">
-					<div class="container">
-						<div class="row">
-							<section class="col-5 col-8-narrower col-15-mobilep">
-								<h3>Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="https://www.uminho.pt/PT">UMinho</a></li>
-									<li><a href="https://www.ecum.uminho.pt/pt">Escola de Ciências</a></li>
-									<li><a href="http://www.math.uminho.pt/">Departamento de Matemática</a></li>
-									<li><a href="https://mate.unipv.it/~salvaran/IMEDiL/project.html">Projeto IMEDiL – Inclusive Mathematics Education based on Digital Learning | 2021-1-FR01-KA220-HED-000023486</a></li>
-								</ul>
-							</section>
 						</div>
 					</div>
+				</section>
+
+			<!-- Footer -->
+			<div id="footer">
+				<div class="container">
+					<div class="row">
+						<section class="col-5 col-8-narrower col-15-mobilep">
+							<h3>Links</h3>
+							<ul class="links">
+								<li><a href="https://www.uminho.pt/PT">UMinho</a></li>
+								<li><a href="https://www.ecum.uminho.pt/pt">Escola de Ciências</a></li>
+								<li><a href="http://www.math.uminho.pt/">Departamento de Matemática</a></li>
+								<li><a href="https://mate.unipv.it/~salvaran/IMEDiL/project.html">Projeto IMEDiL – Inclusive Mathematics Education based on Digital Learning | 2021-1-FR01-KA220-HED-000023486</a></li>
+							</ul>
+						</section>
+					</div>
+				</div>
 
 					<!-- Icons -->
 					<div style="display: flex; justify-content: center; margin-left: 550px;">
@@ -115,21 +135,21 @@
 							<tr>
 								<td>
 									<a href='http://www.uminho.pt/default.aspx' target="_blank">
-										<img src="/static/images/escolas/um.gif"
+										<img src="static/images/escolas/um.gif"
 										alt="Universidade do Minho" style="width: 70px;">
 									</a>
 									<a target="_blank" href='http://www.ecum.uminho.pt'>
-										<img src="/static/images/escolas/220.gif"
+										<img src="static/images/escolas/220.gif"
 										alt="Escola de Ciências" style="width: 70px;">
 									</a>
 								</td>
 								<td>
 									<a href='https://erasmus-plus.ec.europa.eu/' target="_blank">
-										<img src="/static/images/erasmus.png" alt=""
+										<img src="static/images/erasmus.png" alt=""
 										style="width: 232px;">
 									</a>
 									<a href='https://agence.erasmusplus.fr/en/' target="_blank">
-										<img src="/static/images/erasmusfrance.png" alt=""
+										<img src="static/images/erasmusfrance.png" alt=""
 										style="width: 200px; margin-right: 500px;">
 									</a>
 								</td>
@@ -156,13 +176,12 @@
 		</div>
 
 		<!-- Scripts -->
-		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/jquery.dropotron.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/browser.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/breakpoints.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+		<script src="static/js/jquery.min.js"></script>
+		<script src="static/js/jquery.dropotron.min.js"></script>
+		<script src="static/js/browser.min.js"></script>
+		<script src="static/js/breakpoints.min.js"></script>
+		<script src="static/js/util.js"></script>
+		<script src="static/js/main.js"></script>
 
 	</body>
 </html>
-
