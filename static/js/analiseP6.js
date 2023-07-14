@@ -1,182 +1,127 @@
-function coordenadas_esfericas(theta_p, phi_p) {
-	// Define theta and phi ranges
-	const theta = [];
-	const phi = [];
-	for (let t = 0; t < 2 * Math.PI; t += 0.1) {
-		theta.push(t);
-	}
-	for (let p = 0; p < Math.PI; p += 0.1) {
-		phi.push(p);
-	}
+function createReferenceAxes() {
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
+	camera.position.set(0, 0, 5);
 
-	// Set the radius of the sphere
-	const r = Math.sqrt(4);
+	const renderer = new THREE.WebGLRenderer({ alpha: true });
+	renderer.setClearColor(0xffffff, 1);
+	renderer.setSize(800, 600);
+	document.getElementById("graphDiv").appendChild(renderer.domElement);
 
-	// Create the coordinates for 3D
-	const coords = [];
-	for (let p of phi) {
-		for (let t of theta) {
-			const x = r * Math.sin(p) * Math.cos(t);
-			const y = r * Math.sin(p) * Math.sin(t);
-			const z = r * Math.cos(p);
-			coords.push({ x, y, z });
-		}
-	}
+	const axesHelper = new THREE.AxesHelper(2);
+	axesHelper.material.depthTest = false;
+	axesHelper.material.transparent = true;
+	axesHelper.material.opacity = 1;
+	axesHelper.material.color.set(0x000000); // Definir a cor dos eixos como preto
+	scene.add(axesHelper);
 
-	// Create the surface of the sphere
-	const sphereSurface = {
-		type: 'mesh3d',
-		x: coords.map((coord) => coord.x),
-		y: coords.map((coord) => coord.y),
-		z: coords.map((coord) => coord.z),
-		color: 'lightsteelblue',
-		opacity: 0.5,
+	const originGeometry = new THREE.SphereGeometry(0.05);
+	const originMaterial = new THREE.MeshBasicMaterial({ color: "black" });
+	const origin = new THREE.Mesh(originGeometry, originMaterial);
+	scene.add(origin);
+
+	const geometry = new THREE.SphereGeometry(1, 32, 32);
+	const material = new THREE.MeshBasicMaterial({ color: "lightsteelblue", wireframe: true });
+	const sphere = new THREE.Mesh(geometry, material);
+	scene.add(sphere);
+
+	const lineMaterial = new THREE.LineBasicMaterial({ color: "orange" });
+	const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+		new THREE.Vector3(0, 0, 0),
+		new THREE.Vector3(0, 0, 0),
+	]);
+	const line = new THREE.Line(lineGeometry, lineMaterial);
+	scene.add(line);
+
+	const pointMaterial = new THREE.MeshBasicMaterial({ color: "red" });
+	const pointGeometry = new THREE.SphereGeometry(0.05);
+	const point = new THREE.Mesh(pointGeometry, pointMaterial);
+	scene.add(point);
+
+	const fontLoader = new THREE.FontLoader();
+	fontLoader.load("https://cdn.rawgit.com/mrdoob/three.js/r129/examples/fonts/helvetiker_regular.typeface.json", function (
+		font
+	) {
+		const textMaterial = new THREE.MeshBasicMaterial({ color: "black" });
+
+		const zTextGeometry = new THREE.TextGeometry("z", {
+			font: font,
+			size: 0.2,
+			height: 0.02,
+		});
+		const zText = new THREE.Mesh(zTextGeometry, textMaterial);
+		zText.position.set(0, 0, 1.2);
+		scene.add(zText);
+
+		const yTextGeometry = new THREE.TextGeometry("y", {
+			font: font,
+			size: 0.2,
+			height: 0.02,
+		});
+		const yText = new THREE.Mesh(yTextGeometry, textMaterial);
+		yText.position.set(1.2, 0, 0);
+		scene.add(yText);
+
+		const xTextGeometry = new THREE.TextGeometry("x", {
+			font: font,
+			size: 0.2,
+			height: 0.02,
+		});
+		const xText = new THREE.Mesh(xTextGeometry, textMaterial);
+		xText.position.set(0, 1.2, 0);
+		scene.add(xText);
+	});
+
+	const controls = {
+		theta: 0,
+		phi: 0,
 	};
 
-	// Create the Sphere Wires
-	const sphereWireframe = {
-		type: 'scatter3d',
-		mode: 'lines',
-		x: coords.map((coord) => coord.x),
-		y: coords.map((coord) => coord.y),
-		z: coords.map((coord) => coord.z),
-		line: {
-			color: 'black',
-			width: 0.2,
-		},
-	};
+	const thetaSlider = document.getElementById("theta");
+	const thetaValue = document.getElementById("thetaValue");
+	thetaSlider.addEventListener("input", () => {
+		controls.theta = Number(thetaSlider.value);
+		thetaValue.value = controls.theta;
+		updatePointPosition();
+	});
 
-	// Create the P-point
-	const point = {
-		type: 'scatter3d',
-		mode: 'markers',
-		x: [0],
-		y: [0],
-		z: [0],
-		marker: {
-			color: 'red',
-			size: 5,
-		},
-	};
+	const phiSlider = document.getElementById("phi");
+	const phiValue = document.getElementById("phiValue");
+	phiSlider.addEventListener("input", () => {
+		controls.phi = Number(phiSlider.value);
+		phiValue.value = controls.phi;
+		updatePointPosition();
+	});
 
-	// Create the layout
-	const layout = {
-		scene: {
-			xaxis: { range: [-r, r] },
-			yaxis: { range: [-r, r] },
-			zaxis: { range: [-r, r] },
-			aspectratio: { x: 1, y: 1, z: 1 },
-			camera: {
-				eye: { x: 1.25, y: 1.25, z: 1.25 },
-			},
-		},
-		showlegend: false,
-		margin: { l: 0, r: 0, t: 0, b: 0 },
-	};
+	function updatePointPosition() {
+		const theta = THREE.MathUtils.degToRad(controls.theta);
+		const phi = THREE.MathUtils.degToRad(controls.phi);
 
-	let animationFrameId;
+		const radius = 1;
 
-	// Function to update the P-point position smoothly
-	function updatePointSmooth() {
-		// Update P point coordinates
-		const x_p = r * Math.sin(phi_p) * Math.cos(theta_p);
-		const y_p = r * Math.sin(phi_p) * Math.sin(theta_p);
-		const z_p = r * Math.cos(phi_p);
+		const x = radius * Math.sin(theta) * Math.sin(phi);
+		const y = radius * Math.cos(theta);
+		const z = radius * Math.sin(theta) * Math.cos(phi);
 
-		// Update the position of the P point
-		point.x = [x_p];
-		point.y = [y_p];
-		point.z = [z_p];
+		point.position.set(x, y, z);
+		line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z)]);
 
-		// Update the text
-		const text = `P = (${x_p.toFixed(2)}, ${y_p.toFixed(2)}, ${z_p.toFixed(2)})<br>theta = ${theta_p.toFixed(2)}<br>phi = ${phi_p.toFixed(2)}`;
-		document.getElementById('text').innerHTML = text;
+		const roundedX = x.toFixed(2);
+		const roundedY = y.toFixed(2);
+		const roundedZ = z.toFixed(2);
 
-		Plotly.redraw('graphDiv');
+		document.getElementById("coordinates").innerText = `P = (${roundedX}, ${roundedY}, ${roundedZ})`;
 
-		// Call the next update smoothly
-		animationFrameId = requestAnimationFrame(updatePointSmooth);
+		renderer.render(scene, camera);
 	}
 
-	// Function to update the position of the P point based on theta and phi coordinates
-	function updatePointPosition(theta, phi) {
-		theta_p = theta;
-		phi_p = phi;
+	updatePointPosition();
+
+	function animate() {
+		requestAnimationFrame(animate);
+
+		renderer.render(scene, camera);
 	}
 
-	// Function to update the position of the P point
-	function updatePoint(eventData) {
-		const { key } = eventData;
-
-		if (key === 'ArrowUp') {
-			phi_p += 0.1;
-		} else if (key === 'ArrowDown') {
-			phi_p -= 0.1;
-		} else if (key === 'ArrowRight') {
-			theta_p += 0.1;
-		} else if (key === 'ArrowLeft') {
-			theta_p -= 0.1;
-		}
-
-		// Check limits of theta_p and phi_p
-		if (theta_p < 0) {
-			theta_p += 2 * Math.PI;
-		} else if (theta_p >= 2 * Math.PI) {
-			theta_p -= 2 * Math.PI;
-		}
-		if (phi_p < 0) {
-			phi_p += 2 * Math.PI;
-		} else if (phi_p >= 2 * Math.PI) {
-			phi_p -= 2 * Math.PI;
-		}
-
-		updatePointPosition(theta_p, phi_p);
-	}
-
-	// Configure keyboard event to update point P
-	document.addEventListener('keydown', updatePoint);
-
-	// Configure mouse events for dragging the P point
-	const graphDiv = document.getElementById('graphDiv');
-	let isDragging = false;
-	graphDiv.addEventListener('mousedown', startDrag);
-	graphDiv.addEventListener('mousemove', dragPoint);
-	graphDiv.addEventListener('mouseup', stopDrag);
-	graphDiv.addEventListener('mouseleave', stopDrag);
-
-	let startX, startY;
-
-	function startDrag(event) {
-		isDragging = true;
-		startX = event.clientX;
-		startY = event.clientY;
-	}
-
-	function dragPoint(event) {
-		if (isDragging) {
-			const deltaX = event.clientX - startX;
-			const deltaY = event.clientY - startY;
-
-			const sensitivity = 0.01;
-			theta_p += sensitivity * deltaX;
-			phi_p -= sensitivity * deltaY;
-
-			startX = event.clientX;
-			startY = event.clientY;
-		}
-	}
-
-	function stopDrag() {
-		isDragging = false;
-	}
-
-	// Create the figure
-	const data = [sphereSurface, sphereWireframe, point];
-	Plotly.newPlot('graphDiv', data, layout);
-
-	// Start P-point soft update
-	updatePointSmooth();
-
-	// Update the starting position of the P point
-	updatePointPosition(theta_p, phi_p);
+	animate();
 }
