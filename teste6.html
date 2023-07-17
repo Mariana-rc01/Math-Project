@@ -49,17 +49,24 @@
 		<div id="graphDiv"></div>
 		<div id="controls">
 			<div class="slider">
-				<label for="theta">Theta:</label>
+				<label for="x">X:</label>
 				<div class="input-field">
-					<input type="range" id="theta" min="0" max="360" step="1" value="0" />
-					<input type="text" id="thetaValue" class="input-value" />
+					<input type="range" id="x" min="-1" max="1" step="0.1" value="0" />
+					<input type="text" id="xValue" class="input-value" />
 				</div>
 			</div>
 			<div class="slider">
-				<label for="phi">Phi:</label>
+				<label for="y">Y:</label>
 				<div class="input-field">
-					<input type="range" id="phi" min="0" max="180" step="1" value="0" />
-					<input type="text" id="phiValue" class="input-value" />
+					<input type="range" id="y" min="-1" max="1" step="0.1" value="0" />
+					<input type="text" id="yValue" class="input-value" />
+				</div>
+			</div>
+			<div class="slider">
+				<label for="z">Z:</label>
+				<div class="input-field">
+					<input type="range" id="z" min="-1" max="1" step="0.1" value="0" />
+					<input type="text" id="zValue" class="input-value" />
 				</div>
 			</div>
 			<div class="coordinates">
@@ -73,6 +80,7 @@
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
 			camera.position.set(0, 0, 5);
+			camera.lookAt(scene.position);
 
 			const renderer = new THREE.WebGLRenderer({ alpha: true });
 			renderer.setClearColor(0xffffff, 1);
@@ -130,7 +138,7 @@
 					height: 0.02,
 				});
 				const yText = new THREE.Mesh(yTextGeometry, textMaterial);
-				yText.position.set(1.2, 0, 0);
+				yText.position.set(0, 1.2, 0);
 				scene.add(yText);
 
 				const xTextGeometry = new THREE.TextGeometry("x", {
@@ -139,49 +147,71 @@
 					height: 0.02,
 				});
 				const xText = new THREE.Mesh(xTextGeometry, textMaterial);
-				xText.position.set(0, 1.2, 0);
+				xText.position.set(1.2, 0, 0);
 				scene.add(xText);
 			});
 
 			const controls = {
-				theta: 0,
-				phi: 0,
+				x: 0,
+				y: 0,
+				z: 0,
 			};
 
-			const thetaSlider = document.getElementById("theta");
-			const thetaValue = document.getElementById("thetaValue");
-			thetaSlider.addEventListener("input", () => {
-				controls.theta = Number(thetaSlider.value);
-				thetaValue.value = controls.theta;
+			const xSlider = document.getElementById("x");
+			const xValue = document.getElementById("xValue");
+			xSlider.addEventListener("input", () => {
+				controls.x = Number(xSlider.value);
+				xValue.value = controls.x;
 				updatePointPosition();
 			});
 
-			const phiSlider = document.getElementById("phi");
-			const phiValue = document.getElementById("phiValue");
-			phiSlider.addEventListener("input", () => {
-				controls.phi = Number(phiSlider.value);
-				phiValue.value = controls.phi;
+			const ySlider = document.getElementById("y");
+			const yValue = document.getElementById("yValue");
+			ySlider.addEventListener("input", () => {
+				controls.y = Number(ySlider.value);
+				yValue.value = controls.y;
 				updatePointPosition();
 			});
+
+			const zSlider = document.getElementById("z");
+			const zValue = document.getElementById("zValue");
+			zSlider.addEventListener("input", () => {
+				controls.z = Number(zSlider.value);
+				zValue.value = controls.z;
+				updatePointPosition();
+			});
+
+			function formatFraction(value) {
+				if (value === 0) {
+					return "0";
+				} else if (value === Math.PI) {
+					return "π";
+				} else if (Math.abs(value) === Math.PI / 2) {
+					const sign = Math.sign(value) === -1 ? "-" : "";
+					return `${sign}π/2`;
+				} else if (Math.abs(value) === Math.PI / 4) {
+					const sign = Math.sign(value) === -1 ? "-" : "";
+					return `${sign}π/4`;
+				} else {
+					const piFraction = value / Math.PI;
+					return `${value.toFixed(2)}π`;
+				}
+			}
 
 			function updatePointPosition() {
-				const theta = THREE.MathUtils.degToRad(controls.theta);
-				const phi = THREE.MathUtils.degToRad(controls.phi);
+				const ro = Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2);
+				const theta = Math.acos(controls.x / ro);
+				const phi = Math.atan2(controls.z, controls.y);
 
-				const radius = 1;
+				point.position.set(controls.x, controls.y, controls.z);
+				sphere.scale.set(ro, ro, ro);
+				line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(controls.x, controls.y, controls.z)]);
 
-				const x = radius * Math.sin(theta) * Math.sin(phi);
-				const y = radius * Math.cos(theta);
-				const z = radius * Math.sin(theta) * Math.cos(phi);
+				const roundedRo = ro.toFixed(2);
+				const roundedTheta = formatFraction(theta);
+				const roundedPhi = formatFraction(phi);
 
-				point.position.set(x, y, z);
-				line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z)]);
-
-				const roundedX = x.toFixed(2);
-				const roundedY = y.toFixed(2);
-				const roundedZ = z.toFixed(2);
-
-				document.getElementById("coordinates").innerText = `P = (${roundedX}, ${roundedY}, ${roundedZ})`;
+				document.getElementById("coordinates").innerText = `P = (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 
 				renderer.render(scene, camera);
 			}
