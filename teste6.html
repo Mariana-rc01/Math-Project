@@ -230,16 +230,20 @@
 			});
 
 			function formatFraction(value) {
+				if (value < 0) {
+					while (value < 0) {
+						value = value + Math.PI;
+					}
+				}
+
 				if (value === 0) {
 					return "0";
 				} else if (value === Math.PI) {
 					return "π";
-				} else if (Math.abs(value) === Math.PI / 2) {
-					const sign = Math.sign(value) === -1 ? "-" : "";
-					return `${sign}π/2`;
-				} else if (Math.abs(value) === Math.PI / 4) {
-					const sign = Math.sign(value) === -1 ? "-" : "";
-					return `${sign}π/4`;
+				} else if (value === Math.PI / 2) {
+					return `π/2`;
+				} else if (value === Math.PI / 4) {
+					return `π/4`;
 				} else {
 					const piFraction = value / Math.PI;
 					return `${value.toFixed(2)}π`;
@@ -248,7 +252,7 @@
 
 			function updatePointPosition() {
 				const ro = Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2);
-				const theta = Math.atan2(controls.x, controls.z); // Troquei Z por X
+				const theta = Math.atan(controls.x / controls.z); // Troquei Z por X
 				const phi = Math.acos(controls.y / ro); // Troquei X por Y
 
 				point.position.set(controls.x, controls.y, controls.z);

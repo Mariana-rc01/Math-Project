@@ -17,7 +17,7 @@
 			}
 			#graphDiv {
 				width: 800px;
-				height: 600px;
+				height: 650px;
 				margin: auto;
 			}
 			#controls {
@@ -136,25 +136,33 @@
 									</article>
 									<div id="container">
 										<div id="graphDiv"></div>
-										<div id="controls">
+										<div id="controls" style="margin-top: 5px;">
+											<div class="coordinates" style="margin-top: 5px; margin-bottom: 5px;">
+												<span id="coordinates">P ≡ (0, 0, 0)</span>
+											</div>
 											<div class="slider">
-												<label for="theta">Theta:</label>
 												<div class="input-field">
-													<input type="range" id="theta" min="0" max="360" step="1" value="0" style="width: 500px;" />
-													<input type="text" id="thetaValue" class="input-value" style="width: 100px;" />
+													<label for="y">X:</label>
+													<input type="range" id="y" min="-1" max="1" step="0.1" value="0" style="width: 650px;">
+													<input type="text" id="yValue" class="input-value" style="width: 70px;">
 												</div>
 											</div>
 											<div class="slider">
-												<label for="phi">Phi:</label>
 												<div class="input-field">
-													<input type="range" id="phi" min="0" max="180" step="1" value="0" style="width: 500px;" />
-													<input type="text" id="phiValue" class="input-value" style="width: 100px;" />
+													<label for="z">Y:</label>
+													<input type="range" id="z" min="-1" max="1" step="0.1" value="0" style="width: 650px;">
+													<input type="text" id="zValue" class="input-value" style="width: 70px;">
 												</div>
 											</div>
-											<div class="coordinates">
-												<span id="coordinates">P = (0, 0, 0)</span>
+											<div class="slider">
+												<div class="input-field">
+													<label for="x">Z:</label>
+													<input type="range" id="x" min="-1" max="1" step="0.1" value="0" style="width: 650px;">
+													<input type="text" id="xValue" class="input-value" style="width: 70px;">
+												</div>
 											</div>
 										</div>
+									</div>
 									</div>
 										<script src="static/js/analiseP6.js"></script>
 										<script>
