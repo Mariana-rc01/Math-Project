@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gráfico 3D com Curvas de Nível</title>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<style>
+		.container {
+			display: flex;
+		}
+
+		.graph {
+			width: 70%;
+		}
+
+		.modebar-container {
+			display: none !important;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div id="graph1" class="graph"></div>
+		<div id="graph2" class="graph"></div>
+	</div>
+
+	<script>
+		// Definition of the function f
+		function f(x, y) {
+			return x ** 2 + y ** 2;
+		}
+
+		// Range of values for x and y
+		var x = Array.from({ length: 100 }, (_, i) => -5 + (i / 99) * 10);
+		var y = Array.from({ length: 100 }, (_, i) => -5 + (i / 99) * 10);
+
+		// Z values (f(x, y)) for x and y values
+		var Z = [];
+		for (var i = 0; i < x.length; i++) {
+			var row = [];
+			for (var j = 0; j < y.length; j++) {
+				row.push(f(x[i], y[j]));
+			}
+			Z.push(row);
+		}
+
+		// c values for contour lines
+		var c_values = [];
+		var minZ = Math.min(...Z.flat());
+		var maxZ = Math.max(...Z.flat());
+		for (var k = 0; k < 10; k++) {
+			c_values.push(minZ + (k / 9) * (maxZ - minZ));
+		}
+
+		// Plot of graphs of f(x, y) and level curves
+		var data1 = [
+			{
+				type: "surface",
+				x: y, // Switched x and y here
+				y: x, // Switched x and y here
+				z: Z,
+				colorscale: "Viridis",
+				opacity: 0.5,
+				showscale: false // Disable colorscale
+			}
+		];
+
+		var layout1 = {
+			title: "Gráfico de f(x, y)",
+			scene: {
+				xaxis: { title: "Y" }, // Changed x-axis title to "Y"
+				yaxis: { title: "X" }, // Changed y-axis title to "X"
+				zaxis: { title: "Z" }
+			},
+			width: 500,
+			height: 500,
+			hovermode: false // Disable hovermode
+		};
+
+		Plotly.newPlot("graph1", data1, layout1);
+
+		// Contours in rectangular planes
+		var data2 = [
+			{
+				type: "contour",
+				x: x,
+				y: y,
+				z: Z,
+				colorscale: "Viridis",
+				ncontours: 30,
+				showscale: false // Disable colorscale
+			}
+		];
+
+		var layout2 = {
+			title: "Curvas de Nível",
+			xaxis: { title: "X" },
+			yaxis: { title: "Y" },
+			width: 500,
+			height: 500
+		};
+
+		Plotly.newPlot("graph2", data2, layout2);
+
+		for (var m = 0; m < c_values.length; m++) {
+			var mask = Z.map(row => row.map(val => val >= c_values[m]));
+			var Z_masked = Z.map((row, i) => row.map((val, j) => (mask[i][j] ? c_values[m] : NaN)));
+
+			var trace = {
+				type: "surface",
+				x: y, // Switched x and y here
+				y: x, // Switched x and y here
+				z: Z_masked,
+				colorscale: "Reds",
+				showscale: false,
+				opacity: 0.3,
+				hoverinfo: "none"
+			};
+
+			Plotly.addTraces("graph1", trace);
+		}
+
+		var graph1 = document.getElementById("graph1");
+		graph1.on("plotly_hover", function(data) {
+			var infotext = data.points.map(function(d) {
+				return "X: " + d.y.toPrecision(3) + "<br>Y: " + d.x.toPrecision(3) + "<br>Z: " + d.z.toPrecision(3);
+			});
+
+			var hoverinfo = document.getElementById("hoverinfo");
+			if (hoverinfo) {
+				hoverinfo.innerHTML = infotext.join("<br><br>");
+			}
+		});
+
+		graph1.on("plotly_unhover", function() {
+			var hoverinfo = document.getElementById("hoverinfo");
+			if (hoverinfo) {
+				hoverinfo.innerHTML = "";
+			}
+		});
+	</script>
+
+	<div id="hoverinfo" style="position: absolute; top: 20px; left: 550px;"></div>
+</body>
+</html>
