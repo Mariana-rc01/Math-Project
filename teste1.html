@@ -25,20 +25,25 @@
 
 	<script>
 		// Definition of the function f
-		function f(x, y) {
-			return x ** 2 + y ** 2;
+		function f(x, y, a, b) {
+			return a * x ** 2 + b * y ** 2;
 		}
 
 		// Range of values for x and y
-		var x = Array.from({ length: 100 }, (_, i) => -5 + (i / 99) * 10);
-		var y = Array.from({ length: 100 }, (_, i) => -5 + (i / 99) * 10);
+		var resolution = 50; // Adjust the resolution as needed
+		var x = Array.from({ length: resolution }, (_, i) => -5 + (i / (resolution - 1)) * 10);
+		var y = Array.from({ length: resolution }, (_, i) => -5 + (i / (resolution - 1)) * 10);
+
+		// Default values for a and b
+		var a = 1;
+		var b = 1;
 
 		// Z values (f(x, y)) for x and y values
 		var Z = [];
 		for (var i = 0; i < x.length; i++) {
 			var row = [];
 			for (var j = 0; j < y.length; j++) {
-				row.push(f(x[i], y[j]));
+				row.push(f(x[i], y[j], a, b));
 			}
 			Z.push(row);
 		}
@@ -73,7 +78,25 @@
 			},
 			width: 500,
 			height: 500,
-			hovermode: false // Disable hovermode
+			hovermode: false, // Disable hovermode
+			annotations: [
+				{
+					x: 0.5,
+					y: 1.15,
+					xref: "paper",
+					yref: "paper",
+					text: "Valor de a: " + a,
+					showarrow: false
+				},
+				{
+					x: 0.5,
+					y: 1.1,
+					xref: "paper",
+					yref: "paper",
+					text: "Valor de b: " + b,
+					showarrow: false
+				}
+			]
 		};
 
 		Plotly.newPlot("graph1", data1, layout1);
@@ -86,7 +109,7 @@
 				y: y,
 				z: Z,
 				colorscale: "Viridis",
-				ncontours: 30,
+				ncontours: 1, // Start with only one contour
 				showscale: false // Disable colorscale
 			}
 		];
@@ -101,43 +124,84 @@
 
 		Plotly.newPlot("graph2", data2, layout2);
 
-		for (var m = 0; m < c_values.length; m++) {
-			var mask = Z.map(row => row.map(val => val >= c_values[m]));
-			var Z_masked = Z.map((row, i) => row.map((val, j) => (mask[i][j] ? c_values[m] : NaN)));
+		function updateGraph() {
+			a = parseFloat(document.getElementById("a").value);
+			b = parseFloat(document.getElementById("b").value);
 
-			var trace = {
-				type: "surface",
-				x: y, // Switched x and y here
-				y: x, // Switched x and y here
-				z: Z_masked,
-				colorscale: "Reds",
-				showscale: false,
-				opacity: 0.3,
-				hoverinfo: "none"
-			};
+			// Update Z values with new a and b
+			for (var i = 0; i < x.length; i++) {
+				for (var j = 0; j < y.length; j++) {
+					Z[i][j] = f(x[i], y[j], a, b);
+				}
+			}
 
-			Plotly.addTraces("graph1", trace);
-		}
+			// Update surface plot
+			Plotly.update("graph1", { z: [Z] });
 
-		var graph1 = document.getElementById("graph1");
-		graph1.on("plotly_hover", function(data) {
-			var infotext = data.points.map(function(d) {
-				return "X: " + d.y.toPrecision(3) + "<br>Y: " + d.x.toPrecision(3) + "<br>Z: " + d.z.toPrecision(3);
+			// Update contour plot
+			var contours = document.getElementById("contourMode").value;
+			Plotly.update("graph2", { ncontours: contours, z: [Z] });
+
+			// Add masked surfaces with new a and b
+			if (contours > 1) {
+				for (var m = 0; m < c_values.length; m++) {
+					var mask = Z.map(row => row.map(val => val >= c_values[m]));
+					var Z_masked = Z.map((row, i) => row.map((val, j) => (mask[i][j] ? c_values[m] : NaN)));
+
+					var trace = {
+						type: "surface",
+						x: y, // Switched x and y here
+						y: x, // Switched x and y here
+						z: Z_masked,
+						colorscale: "Reds",
+						showscale: false,
+						opacity: 0.3,
+						hoverinfo: "none"
+					};
+
+					Plotly.addTraces("graph1", trace);
+				}
+			}
+
+			// Update annotations with new values of a and b
+			Plotly.relayout("graph1", {
+				annotations: [
+					{
+						x: 0.5,
+						y: 1.15,
+						xref: "paper",
+						yref: "paper",
+						text: "Valor de a: " + a,
+						showarrow: false
+					},
+					{
+						x: 0.5,
+						y: 1.1,
+						xref: "paper",
+						yref: "paper",
+						text: "Valor de b: " + b,
+						showarrow: false
+					}
+				]
 			});
-
-			var hoverinfo = document.getElementById("hoverinfo");
-			if (hoverinfo) {
-				hoverinfo.innerHTML = infotext.join("<br><br>");
-			}
-		});
-
-		graph1.on("plotly_unhover", function() {
-			var hoverinfo = document.getElementById("hoverinfo");
-			if (hoverinfo) {
-				hoverinfo.innerHTML = "";
-			}
-		});
+		}
 	</script>
+
+	<div>
+		<label for="a">Valor de a:</label>
+		<input type="number" id="a" value="1" />
+	</div>
+	<div>
+		<label for="b">Valor de b:</label>
+		<input type="number" id="b" value="1" />
+	</div>
+	<div>
+		<label for="contourMode">Modo de Curvas de Nível:</label>
+		<select id="contourMode" onchange="updateGraph()">
+			<option value="1">Apenas uma curva de nível</option>
+			<option value="30">Diversas curvas de nível</option>
+		</select>
+	</div>
 
 	<div id="hoverinfo" style="position: absolute; top: 20px; left: 550px;"></div>
 </body>
