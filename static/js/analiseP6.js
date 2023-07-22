@@ -152,30 +152,42 @@ function createReferenceAxes() {
 	});
 
 	function formatFraction(value) {
-		if (value < 0) {
-			while (value < 0) {
-				value = value + Math.PI;
-			}
-		}
+		const piFraction = (value / Math.PI).toFixed(2);
 
-		if (value === 0) {
+		if (piFraction === "0.00") {
 			return "0";
-		} else if (value === Math.PI) {
+		} else if (piFraction === "1.00") {
 			return "π";
-		} else if (value === Math.PI / 2) {
+		} else if (piFraction === "0.50") {
 			return `π/2`;
-		} else if (value === Math.PI / 4) {
+		} else if (piFraction === "0.25") {
 			return `π/4`;
 		} else {
-			const piFraction = value / Math.PI;
-			return `${value.toFixed(2)}π`;
+			return `${piFraction}π`;
 		}
 	}
 
 	function updatePointPosition() {
 		const ro = Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2);
-		const theta = Math.atan(controls.x / controls.z); // Troquei Z por X
-		const phi = Math.acos(controls.y / ro); // Troquei X por Y
+		theta = 0;
+		const value = Math.sqrt(controls.z ** 2 + controls.x ** 2);
+		if (controls.z === 0 && controls.x === 0) {
+			theta = 0;
+		}
+		else if (controls.x >= 0) {
+			theta = Math.acos(controls.z / value);
+		}
+		else {
+			theta = 2 * Math.PI - Math.acos(controls.z / value);
+			// Troquei X por Z e Y por X
+		}
+		phi = 0;
+		if (controls.y === 0 && controls.x === 0 && controls.z === 0) {
+			phi = 0;
+		}
+		else {
+			phi = Math.acos(controls.y / ro); // Troquei Z por Y
+		}
 
 		point.position.set(controls.x, controls.y, controls.z);
 		sphere.scale.set(ro, ro, ro);
