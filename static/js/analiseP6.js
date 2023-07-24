@@ -75,7 +75,7 @@ function createReferenceAxes() {
 	fontLoader.load("https://cdn.rawgit.com/mrdoob/three.js/r129/examples/fonts/helvetiker_regular.typeface.json", function (font) {
 		const textMaterial = new THREE.MeshBasicMaterial({ color: "black" });
 
-		const xTextGeometry = new THREE.TextGeometry("x", {
+		const xTextGeometry = new THREE.TextGeometry("X", {
 			font: font,
 			size: 0.08,
 			height: 0.02,
@@ -84,7 +84,7 @@ function createReferenceAxes() {
 		xText.position.set(0, 0, 3); // Posição do texto X alterada
 		zAxis.add(xText); // Texto X adicionado ao Z-Axis
 
-		const yTextGeometry = new THREE.TextGeometry("y", {
+		const yTextGeometry = new THREE.TextGeometry("Y", {
 			font: font,
 			size: 0.1,
 			height: 0.02,
@@ -93,7 +93,7 @@ function createReferenceAxes() {
 		yText.position.set(2, 0, 0);
 		yAxis.add(yText);
 
-		const zTextGeometry = new THREE.TextGeometry("z", {
+		const zTextGeometry = new THREE.TextGeometry("Z", {
 			font: font,
 			size: 0.1,
 			height: 0.02,
@@ -151,6 +151,33 @@ function createReferenceAxes() {
 		updatePointPosition();
 	});
 
+	const thetaLineMaterial = new THREE.LineBasicMaterial({ color: "green"});
+	const thetaLineGeometry = new THREE.BufferGeometry().setFromPoints([
+		new THREE.Vector3(0, 0, 0),
+		new THREE.Vector3(controls.x, 0, controls.z),
+	]);
+	thetaLine = new THREE.Line(thetaLineGeometry, thetaLineMaterial);
+	scene.add(thetaLine);
+
+	const thetaCurveMaterial = new THREE.LineBasicMaterial({ color: "green" });
+	const thetaCurvePoints = [];
+	const thetaCurve = new THREE.Line(new THREE.BufferGeometry(), thetaCurveMaterial);
+	scene.add(thetaCurve);
+
+	// Linha Phi
+	const phiLineMaterial = new THREE.LineBasicMaterial({ color: "red" });
+	const phiLineGeometry = new THREE.BufferGeometry().setFromPoints([
+		new THREE.Vector3(controls.x, controls.y, controls.z),
+		new THREE.Vector3(0, Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2), 0),
+	]);
+	const phiLine = new THREE.Line(phiLineGeometry, phiLineMaterial);
+	scene.add(phiLine);
+
+  const phiCurveMaterial = new THREE.LineBasicMaterial({ color: "red" });
+  const phiCurvePoints = [];
+  const phiCurve = new THREE.Line(new THREE.BufferGeometry(), phiCurveMaterial);
+  scene.add(phiCurve);
+
 	function formatFraction(value) {
 		const piFraction = (value / Math.PI).toFixed(2);
 
@@ -196,6 +223,43 @@ function createReferenceAxes() {
 		const roundedRo = ro.toFixed(2);
 		const roundedTheta = formatFraction(theta);
 		const roundedPhi = formatFraction(phi);
+
+		// Atualizar geometria das linhas Theta e Phi
+		thetaLine.geometry.setFromPoints([
+			new THREE.Vector3(0, 0, 0),
+			new THREE.Vector3(controls.x, 0, controls.z),
+		]);
+
+		// Atualizar posição da linha curva de theta
+		thetaCurvePoints.length = 0; // Limpar os pontos anteriores
+		thetaCurvePoints.push(new THREE.Vector3(0, 0, 0)); // Adicionar ponto inicial
+		for (let angle = 0; angle <= theta; angle += 0.01) {
+			const x = Math.cos(angle) * value;
+			const z = Math.sin(angle) * value;
+			thetaCurvePoints.push(new THREE.Vector3(z, 0, x));
+		}
+		thetaCurve.geometry.setFromPoints(thetaCurvePoints);
+
+		phiLine.geometry.setFromPoints([
+      new THREE.Vector3(controls.x, controls.y, controls.z),
+      new THREE.Vector3(0, Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2), 0),
+    ]);
+
+		phiCurvePoints.length = 0; // Limpar os pontos anteriores
+		phiCurvePoints.push(new THREE.Vector3(0, ro, 0)); // Adicionar ponto inicial (igual a P)
+		const q = Math.sqrt(controls.x ** 2 + controls.z ** 2);
+		for (let angle = 0; angle <= phi; angle += 0.01) {
+			const x = Math.cos(angle) * q;
+			const z = Math.sin(angle) * q;
+			if (controls.x <= 0) {
+				phiCurvePoints.push(new THREE.Vector3(-z, x, 0)); // Coordenadas atualizadas
+			}
+			else {
+				phiCurvePoints.push(new THREE.Vector3(z, x, 0)); // Coordenadas atualizadas
+			}
+		}
+		phiCurve.geometry.setFromPoints(phiCurvePoints);
+
 
 		document.getElementById("coordinates").innerText = `P ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 
