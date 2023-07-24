@@ -26,7 +26,8 @@ rv = multivariate_normal(cov=mcov, mean=mu)
 fig = make_subplots()
 fig.add_trace(go.Surface(x=X, y=Y, z=rv.pdf(pos),
                          colorscale='Viridis', showscale=False))
-
+"""fig.update_traces(contours_z=dict(show=True, usecolormap=True,
+                                  highlightcolor="limegreen", project_z=True))"""
 st.plotly_chart(fig, use_container_width=True)
 
 fig2 = plt.figure()
