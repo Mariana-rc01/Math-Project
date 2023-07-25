@@ -1,208 +1,358 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Gráfico 3D com Curvas de Nível</title>
-	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	<style>
-		.container {
-			display: flex;
-		}
+		<title>Gráficos Interativos</title>
+		<!-- Incluir os arquivos JavaScript e CSS do Plotly -->
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<style>
+				/* Estilo para a div do gráfico 3D */
+				#plotly-graph-3d {
+						width: 70%;
+						float: left;
+				}
 
-		.graph {
-			width: 70%;
-		}
+				/* Estilo para a div do gráfico de curvas de nível */
+				#plotly-graph-contour {
+						width: 30%;
+						float: right;
+				}
 
-		.modebar-container {
-			display: none !important;
-		}
-	</style>
+				/* Estilo para a barra de deslizar */
+				.slider-container {
+						display: flex;
+						align-items: center;
+				}
+
+				.slider {
+						flex: 1;
+				}
+
+				.slider-value {
+						width: 40px;
+						margin-left: 10px;
+						text-align: center;
+				}
+		</style>
 </head>
 <body>
-	<div class="container">
-		<div id="graph1" class="graph"></div>
-		<div id="graph2" class="graph"></div>
-	</div>
+		<h1>Gráficos 3D Interativos com Curvas de Nível</h1>
+		<!-- Formulário para entrada de valores de a, b e quantidade de curvas de nível -->
+		<form oninput="updateGraph()">
+				<label for="a">Valor de a:</label>
+				<input type="number" id="a" step="0.1" value="1"><br>
+				<label for="b">Valor de b:</label>
+				<input type="number" id="b" step="0.1" value="1"><br>
+				<div class="slider-container">
+						<label for="curves">Quantidade de Curvas de Nível:</label>
+						<input
+								type="radio"
+								id="single-curve"
+								name="curves-option"
+								value="single"
+								checked
+								onchange="toggleCurveOptions()"
+						>
+						<label for="single-curve">Apenas uma curva de nível</label>
+						<input
+								type="radio"
+								id="many-curves"
+								name="curves-option"
+								value="many"
+								onchange="toggleCurveOptions()"
+						>
+						<label for="many-curves">Muitas curvas de nível</label>
+						<br>
+						<div id="level-slider-container">
+								<label for="level">Valor da Curva de Nível:</label>
+								<input
+										type="range"
+										id="level"
+										class="slider"
+										min="0"
+										max="40"
+										step="0.1"
+										value="2"
+										oninput="updateSliderValue()"
+								>
+								<input
+										type="number"
+										id="level-value"
+										class="slider-value"
+										min="0"
+										max="40"
+										step="0.1"
+										value="2"
+										oninput="updateSliderValue()"
+								>
+						</div>
+						<div id="curves-slider-container">
+								<label for="curves">Quantidade de Curvas de Nível:</label>
+								<input
+										type="range"
+										id="curves"
+										class="slider"
+										min="1"
+										max="50"
+										value="10"
+										oninput="updateSliderValue()"
+								>
+								<input
+										type="number"
+										id="curves-value"
+										class="slider-value"
+										min="1"
+										max="50"
+										value="10"
+										oninput="updateSliderValue()"
+								>
+						</div>
+				</div>
+		</form>
 
-	<script>
-		// Definition of the function f
-		function f(x, y, a, b) {
-			return a * x ** 2 + b * y ** 2;
-		}
+		<!-- Divs onde os gráficos serão exibidos -->
+		<div id="plotly-graph-3d"></div>
+		<div id="plotly-graph-contour"></div>
 
-		// Range of values for x and y
-		var resolution = 50; // Adjust the resolution as needed
-		var x = Array.from({ length: resolution }, (_, i) => -5 + (i / (resolution - 1)) * 10);
-		var y = Array.from({ length: resolution }, (_, i) => -5 + (i / (resolution - 1)) * 10);
-
-		// Default values for a and b
-		var a = 1;
-		var b = 1;
-
-		// Z values (f(x, y)) for x and y values
-		var Z = [];
-		for (var i = 0; i < x.length; i++) {
-			var row = [];
-			for (var j = 0; j < y.length; j++) {
-				row.push(f(x[i], y[j], a, b));
-			}
-			Z.push(row);
-		}
-
-		// c values for contour lines
-		var c_values = [];
-		var minZ = Math.min(...Z.flat());
-		var maxZ = Math.max(...Z.flat());
-		for (var k = 0; k < 10; k++) {
-			c_values.push(minZ + (k / 9) * (maxZ - minZ));
-		}
-
-		// Plot of graphs of f(x, y) and level curves
-		var data1 = [
-			{
-				type: "surface",
-				x: y, // Switched x and y here
-				y: x, // Switched x and y here
-				z: Z,
-				colorscale: "Viridis",
-				opacity: 0.5,
-				showscale: false // Disable colorscale
-			}
-		];
-
-		var layout1 = {
-			title: "Gráfico de f(x, y)",
-			scene: {
-				xaxis: { title: "Y" }, // Changed x-axis title to "Y"
-				yaxis: { title: "X" }, // Changed y-axis title to "X"
-				zaxis: { title: "Z" }
-			},
-			width: 500,
-			height: 500,
-			hovermode: false, // Disable hovermode
-			annotations: [
-				{
-					x: 0.5,
-					y: 1.15,
-					xref: "paper",
-					yref: "paper",
-					text: "Valor de a: " + a,
-					showarrow: false
-				},
-				{
-					x: 0.5,
-					y: 1.1,
-					xref: "paper",
-					yref: "paper",
-					text: "Valor de b: " + b,
-					showarrow: false
+		<script type="text/javascript">
+				// Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a e b
+				function f(x, y, a, b) {
+						return a * x**2 + b * y**2;
 				}
-			]
-		};
 
-		Plotly.newPlot("graph1", data1, layout1);
-
-		// Contours in rectangular planes
-		var data2 = [
-			{
-				type: "contour",
-				x: x,
-				y: y,
-				z: Z,
-				colorscale: "Viridis",
-				ncontours: 1, // Start with only one contour
-				showscale: false // Disable colorscale
-			}
-		];
-
-		var layout2 = {
-			title: "Curvas de Nível",
-			xaxis: { title: "X" },
-			yaxis: { title: "Y" },
-			width: 500,
-			height: 500
-		};
-
-		Plotly.newPlot("graph2", data2, layout2);
-
-		function updateGraph() {
-			a = parseFloat(document.getElementById("a").value);
-			b = parseFloat(document.getElementById("b").value);
-
-			// Update Z values with new a and b
-			for (var i = 0; i < x.length; i++) {
-				for (var j = 0; j < y.length; j++) {
-					Z[i][j] = f(x[i], y[j], a, b);
+				// Função para calcular as curvas de nível com base nos valores de x, y, a e b
+				function contourLevels(x, y, a, b) {
+						var Z = [];
+						for (var i = 0; i < x.length; i++) {
+								var z_row = [];
+								for (var j = 0; j < y.length; j++) {
+										z_row.push(f(x[i], y[j], a, b));
+								}
+								Z.push(z_row);
+						}
+						return Z;
 				}
-			}
 
-			// Update surface plot
-			Plotly.update("graph1", { z: [Z] });
+				// Função para criar o plano de curvas de nível no primeiro gráfico 3D
+				function createContourPlane(x, y, a, b, c) {
+						var Z = contourLevels(x, y, a, b);
+						var Z_masked = Z.map((row) => row.map((val) => (val >= c ? c : NaN)));
 
-			// Update contour plot
-			var contours = document.getElementById("contourMode").value;
-			Plotly.update("graph2", { ncontours: contours, z: [Z] });
-
-			// Add masked surfaces with new a and b
-			if (contours > 1) {
-				for (var m = 0; m < c_values.length; m++) {
-					var mask = Z.map(row => row.map(val => val >= c_values[m]));
-					var Z_masked = Z.map((row, i) => row.map((val, j) => (mask[i][j] ? c_values[m] : NaN)));
-
-					var trace = {
-						type: "surface",
-						x: y, // Switched x and y here
-						y: x, // Switched x and y here
-						z: Z_masked,
-						colorscale: "Reds",
-						showscale: false,
-						opacity: 0.3,
-						hoverinfo: "none"
-					};
-
-					Plotly.addTraces("graph1", trace);
+						return {
+								type: 'surface',
+								x: y,
+								y: x,
+								z: Z_masked,
+								colorscale: 'Reds',
+								showscale: false,
+								opacity: 0.3,
+								hoverinfo: 'none',
+						};
 				}
-			}
 
-			// Update annotations with new values of a and b
-			Plotly.relayout("graph1", {
-				annotations: [
-					{
-						x: 0.5,
-						y: 1.15,
-						xref: "paper",
-						yref: "paper",
-						text: "Valor de a: " + a,
-						showarrow: false
-					},
-					{
-						x: 0.5,
-						y: 1.1,
-						xref: "paper",
-						yref: "paper",
-						text: "Valor de b: " + b,
-						showarrow: false
-					}
-				]
-			});
-		}
-	</script>
+				// Função para criar os cortes horizontais nas posições das curvas de nível no gráfico 2D
+				function createCuts(x, y, a, b, c_values) {
+						var cuts = [];
+						var Z = contourLevels(x, y, a, b);
+						for (var c of c_values) {
+								var trace = {
+										type: 'scatter',
+										mode: 'lines',
+										x: y,
+										y: Z.map((row) => row.map((val) => (val >= c ? c : NaN))),
+										line: { color: 'black' },
+										legendgroup: 'curves',
+										showlegend: false,
+								};
+								cuts.push(trace);
+						}
+						return cuts;
+				}
 
-	<div>
-		<label for="a">Valor de a:</label>
-		<input type="number" id="a" value="1" />
-	</div>
-	<div>
-		<label for="b">Valor de b:</label>
-		<input type="number" id="b" value="1" />
-	</div>
-	<div>
-		<label for="contourMode">Modo de Curvas de Nível:</label>
-		<select id="contourMode" onchange="updateGraph()">
-			<option value="1">Apenas uma curva de nível</option>
-			<option value="30">Diversas curvas de nível</option>
-		</select>
-	</div>
+				// Função para criar o corte horizontal na posição da curva de nível escolhida no gráfico 2D
+				function createSingleCut(x, y, a, b, c) {
+						var Z = contourLevels(x, y, a, b);
+						var trace = {
+								type: 'scatter',
+								mode: 'lines',
+								x: y,
+								y: Z.map((row) => row.map((val) => (val >= c ? c : NaN))),
+								line: { color: 'red', width: 2 },
+								legendgroup: 'curves',
+								showlegend: false,
+						};
+						return trace;
+				}
 
-	<div id="hoverinfo" style="position: absolute; top: 20px; left: 550px;"></div>
+				// Função para atualizar os gráficos com base nos valores de a, b, e quantidade de curvas de nível ou valor da curva de nível
+				function updateGraph() {
+						// Check the selected option (apenas uma curva or muitas curvas)
+						var singleCurveOption = document.getElementById('single-curve');
+						var isSingleCurveOption = singleCurveOption.checked;
+
+						// Obter os valores de a, b, e quantidade de curvas de nível do formulário
+						var a = parseFloat(document.getElementById('a').value) || 1; // Valor padrão de 1 para 'a'
+						var b = parseFloat(document.getElementById('b').value) || 1; // Valor padrão de 1 para 'b'
+						var curves = parseInt(
+								document.getElementById('curves-value').value
+						); // Valor padrão de 1 para quantidade de curvas de nível se a caixa estiver vazia
+						var level = parseFloat(
+								document.getElementById('level-value').value
+						); // Valor da curva de nível para a opção de uma curva
+
+						// Atualizar o valor da quantidade de curvas de nível na barra de deslizar
+						document.getElementById('curves').value = curves;
+						// Atualizar o valor da curva de nível na barra de deslizar
+						document.getElementById('level').value = level;
+
+						// Intervalo de valores para x e y
+						var x = [],
+								y = [];
+						for (var i = -5; i <= 5; i += 0.1) {
+								x.push(i);
+								y.push(i);
+						}
+
+						// c values for contour lines
+						var c_values = [];
+						var Z = contourLevels(x, y, a, b);
+						var minZ = Math.min(...Z.flat());
+						var maxZ = Math.max(...Z.flat());
+
+						if (isSingleCurveOption) {
+								// For the single curve option, use the level value to update the contour plane
+								c_values.push(level);
+
+								// Create the single cut for the 2D contour graph
+								var singleCut = createSingleCut(x, y, a, b, level);
+
+								// Criação dos dados dos gráficos
+								var dataContour = [
+										{
+												type: 'contour',
+												x: y,
+												y: x,
+												z: contourLevels(x, y, a, b),
+												colorscale: 'Viridis',
+												zmin: minZ,
+												zmax: maxZ,
+										},
+										singleCut,
+								];
+						} else {
+								// For the many curves option, generate c_values based on the number of curves
+								for (var k = 0; k < curves; k++) {
+										c_values.push(minZ + (k / (curves - 1)) * (maxZ - minZ));
+								}
+
+								// Criação dos cortes horizontais no gráfico 2D
+								var cuts = createCuts(x, y, a, b, c_values);
+
+								// Criação dos dados dos gráficos
+								var dataContour = [
+										{
+												type: 'contour',
+												x: y,
+												y: x,
+												z: contourLevels(x, y, a, b),
+												colorscale: 'Viridis',
+												zmin: minZ,
+												zmax: maxZ,
+										},
+								].concat(cuts);
+						}
+
+						// Criação dos planos de curvas de nível
+						var planes = [];
+						for (var c of c_values) {
+								planes.push(createContourPlane(x, y, a, b, c));
+						}
+
+						// Criação dos dados do gráfico 3D
+						var data3d = [
+								{
+										type: 'surface',
+										x: y,
+										y: x,
+										z: contourLevels(x, y, a, b),
+										colorscale: 'Viridis',
+								},
+						].concat(planes);
+
+						// Definição das opções de layout dos gráficos
+						var layout3d = {
+								title: 'Gráfico 3D Interativo',
+								xaxis_title: 'Y',
+								yaxis_title: 'X',
+								zaxis_title: 'Z',
+								scene: {
+										camera: {
+												eye: { x: 1.2, y: 1.2, z: 0.7 },
+										},
+								},
+						};
+
+						var layoutContour = {
+								title: 'Gráfico de Curvas de Nível',
+								xaxis_title: 'Y',
+								yaxis_title: 'X',
+								yaxis: {
+										type: 'linear',
+										range: [-5, 5],
+								},
+								scene: {
+										camera: {
+												eye: { x: 1.2, y: 1.2, z: 0.7 },
+										},
+								},
+						};
+
+						// Atualização dos gráficos
+						Plotly.react('plotly-graph-3d', data3d, layout3d);
+						Plotly.react('plotly-graph-contour', dataContour, layoutContour);
+				}
+
+				// Atualizar valor da quantidade de curvas de nível ou valor da curva de nível ao mover as barras de deslizar
+				function updateSliderValue() {
+						var curvesSliderContainer = document.getElementById(
+								'curves-slider-container'
+						);
+						var levelSliderContainer = document.getElementById(
+								'level-slider-container'
+						);
+						var curvesValue = document.getElementById('curves').value;
+						var levelValue = document.getElementById('level').value;
+						var curvesValueInput = document.getElementById('curves-value');
+						var levelValueInput = document.getElementById('level-value');
+
+						curvesValueInput.value = curvesValue;
+						levelValueInput.value = levelValue;
+
+						// Update the graph
+						updateGraph();
+				}
+
+				// Alternar opções de quantidade de curvas de nível e valor da curva de nível
+				function toggleCurveOptions() {
+						var singleCurveOption = document.getElementById('single-curve');
+						var levelSliderContainer = document.getElementById(
+								'level-slider-container'
+						);
+						var curvesSliderContainer = document.getElementById(
+								'curves-slider-container'
+						);
+
+						if (singleCurveOption.checked) {
+								levelSliderContainer.style.display = 'block';
+								curvesSliderContainer.style.display = 'none';
+						} else {
+								levelSliderContainer.style.display = 'none';
+								curvesSliderContainer.style.display = 'block';
+						}
+						updateGraph();
+				}
+
+				// Atualizar os gráficos inicialmente
+				updateGraph();
+		</script>
 </body>
 </html>
