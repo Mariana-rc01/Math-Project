@@ -1,150 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-		<title>Gráficos Interativos</title>
-		<!-- Incluir os arquivos JavaScript e CSS do Plotly -->
-		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-		<style>
-				/* Estilo para a div do gráfico 3D */
-				#plotly-graph-3d {
-						width: 70%;
-						float: left;
-				}
+	<title>Gráficos Interativos</title>
+	<!-- Incluir os arquivos JavaScript e CSS do Plotly -->
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<style>
+		/* Estilo para a div do gráfico 3D */
+		#plotly-graph-3d {
+			width: 70%;
+			float: left;
+		}
 
-				/* Estilo para a div do gráfico de curvas de nível */
-				#plotly-graph-contour {
-						width: 30%;
-						float: right;
-				}
-		</style>
+		/* Estilo para a div do gráfico de curvas de nível */
+		#plotly-graph-contour {
+			width: 30%;
+			float: right;
+		}
+
+		/* Estilo para a barra de deslizar */
+		.slider-container {
+			display: flex;
+			align-items: center;
+		}
+
+		.slider {
+			flex: 1;
+		}
+
+		.slider-value {
+			width: 40px;
+			margin-left: 10px;
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
-		<h1>Gráficos 3D Interativos com Curvas de Nível</h1>
-		<!-- Formulário para entrada de valores de a e b -->
-		<form oninput="updateGraph()">
-				<label for="a">Valor de a:</label>
-				<input type="number" id="a" step="0.1" value="1"><br>
-				<label for="b">Valor de b:</label>
-				<input type="number" id="b" step="0.1" value="1"><br>
-				<input type="submit" value="Atualizar Gráfico">
-		</form>
+	<h1>Gráficos 3D Interativos com Curvas de Nível</h1>
+	<!-- Formulário para entrada de valores de a, b e quantidade de curvas de nível -->
+	<form oninput="updateGraph()">
+		<label for="a">Valor de a:</label>
+		<input type="number" id="a" step="0.1" value="1"><br>
+		<label for="b">Valor de b:</label>
+		<input type="number" id="b" step="0.1" value="1"><br>
+		<div class="slider-container">
+			<label for="curves">Quantidade de Curvas de Nível:</label>
+			<input type="range" id="curves" class="slider" min="1" max="50" value="10" oninput="updateSliderValue()">
+			<input type="number" id="curves-value" class="slider-value" min="1" max="50" value="10">
+		</div>
+		<input type="submit" value="Atualizar Gráfico">
+	</form>
 
-		<!-- Divs onde os gráficos serão exibidos -->
-		<div id="plotly-graph-3d"></div>
-		<div id="plotly-graph-contour"></div>
+	<!-- Divs onde os gráficos serão exibidos -->
+	<div id="plotly-graph-3d"></div>
+	<div id="plotly-graph-contour"></div>
 
-		<script type="text/javascript">
-				// Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a e b
-				function f(x, y, a, b) {
-						return a * x**2 + b * y**2;
+	<script type="text/javascript">
+		// Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a e b
+		function f(x, y, a, b) {
+			return a * x**2 + b * y**2;
+		}
+
+		// Função para calcular as curvas de nível com base nos valores de x, y, a e b
+		function contourLevels(x, y, a, b) {
+			var Z = [];
+			for (var i = 0; i < x.length; i++) {
+				var z_row = [];
+				for (var j = 0; j < y.length; j++) {
+					z_row.push(f(x[i], y[j], a, b));
 				}
+				Z.push(z_row);
+			}
+			return Z;
+		}
 
-				// Função para calcular as curvas de nível com base nos valores de x, y, a e b
-				function contourLevels(x, y, a, b) {
-						var Z = [];
-						for (var i = 0; i < x.length; i++) {
-								var z_row = [];
-								for (var j = 0; j < y.length; j++) {
-										z_row.push(f(x[i], y[j], a, b));
-								}
-								Z.push(z_row);
-						}
-						return Z;
+		// Função para criar o plano de curvas de nível no primeiro gráfico 3D
+		function createContourPlane(x, y, a, b, c) {
+			var Z = contourLevels(x, y, a, b);
+			var Z_masked = Z.map(row => row.map(val => (val >= c ? c : NaN)));
+
+			return {
+				type: 'surface',
+				x: y,
+				y: x,
+				z: Z_masked,
+				colorscale: 'Reds',
+				showscale: false,
+				opacity: 0.3,
+				hoverinfo: 'none'
+			};
+		}
+
+		// Função para atualizar os gráficos com base nos valores de a, b e quantidade de curvas de nível
+		function updateGraph() {
+			// Obter os valores de a, b e quantidade de curvas de nível do formulário
+			var a = parseFloat(document.getElementById('a').value) || 1; // Valor padrão de 1 para 'a'
+			var b = parseFloat(document.getElementById('b').value) || 1; // Valor padrão de 1 para 'b'
+			var curves = parseInt(document.getElementById('curves-value').value); // Valor padrão de 1 para quantidade de curvas de nível se a caixa estiver vazia
+
+			// Atualizar o valor da quantidade de curvas de nível na barra de deslizar
+			document.getElementById('curves').value = curves;
+
+			// Intervalo de valores para x e y
+			var x = [], y = [];
+			for (var i = -5; i <= 5; i += 0.1) {
+				x.push(i);
+				y.push(i);
+			}
+
+			// c values for contour lines
+			var c_values = [];
+			var Z = contourLevels(x, y, a, b);
+			var minZ = Math.min(...Z.flat());
+			var maxZ = Math.max(...Z.flat());
+			for (var k = 0; k < curves; k++) {
+				c_values.push(minZ + (k / (curves - 1)) * (maxZ - minZ));
+			}
+
+			// Criação dos planos de curvas de nível
+			var planes = [];
+			for (var c of c_values) {
+				planes.push(createContourPlane(x, y, a, b, c));
+			}
+
+			// Criação dos dados dos gráficos
+			var data3d = [{
+				type: 'surface',
+				x: y,
+				y: x,
+				z: contourLevels(x, y, a, b),
+				colorscale: 'Viridis'
+			}].concat(planes);
+
+			var dataContour = [{
+				type: 'contour',
+				x: y,
+				y: x,
+				z: contourLevels(x, y, a, b),
+				colorscale: 'Viridis',
+				zmin: minZ,
+				zmax: maxZ,
+			}];
+
+			// Definição das opções de layout dos gráficos
+			var layout3d = {
+				title: 'Gráfico 3D Interativo',
+				xaxis_title: 'Y',
+				yaxis_title: 'X',
+				zaxis_title: 'Z',
+				scene: {
+					camera: {
+						eye: { x: 1.2, y: 1.2, z: 0.7 }
+					}
 				}
+			};
 
-				// Função para criar o plano de curvas de nível no primeiro gráfico 3D
-				function createContourPlane(x, y, a, b, c) {
-						var z_values = contourLevels(x, y, a, b);
-						for (var i = 0; i < x.length; i++) {
-								for (var j = 0; j < y.length; j++) {
-										if (z_values[i][j] < c) {
-												z_values[i][j] = c;
-										}
-								}
-						}
-						return {
-								type: 'surface',
-								x: x,
-								y: y,
-								z: z_values,
-								colorscale: 'Reds',
-								opacity: 0.5,
-								showscale: false
-						};
+			var layoutContour = {
+				title: 'Gráfico de Curvas de Nível',
+				xaxis_title: 'Y',
+				yaxis_title: 'X',
+				scene: {
+					camera: {
+						eye: { x: 1.2, y: 1.2, z: 0.7 }
+					}
 				}
+			};
 
-				// Função para atualizar os gráficos com base nos valores de a e b
-				function updateGraph() {
-						// Obter os valores de a e b do formulário
-						var a = parseFloat(document.getElementById('a').value);
-						var b = parseFloat(document.getElementById('b').value);
+			// Atualização dos gráficos
+			Plotly.react('plotly-graph-3d', data3d, layout3d);
+			Plotly.react('plotly-graph-contour', dataContour, layoutContour);
+		}
 
-						// Intervalo de valores para x e y
-						var x = [], y = [];
-						for (var i = -5; i <= 5; i += 0.1) {
-								x.push(i);
-								y.push(i);
-						}
+		// Atualizar os gráficos inicialmente
+		updateGraph();
 
-						// c values ​​for contour lines
-						var c_values = [2, 4, 6, 8, 10];
-
-						// Criação dos planos de curvas de nível
-						var planes = [];
-						for (var c of c_values) {
-								planes.push(createContourPlane(x, y, a, b, c));
-						}
-
-						// Criação dos dados dos gráficos
-						var data3d = [{
-								type: 'surface',
-								x: x,
-								y: y,
-								z: contourLevels(x, y, a, b),
-								colorscale: 'Viridis'
-						}].concat(planes);
-
-						var dataContour = [{
-								type: 'contour',
-								x: x,
-								y: y,
-								z: contourLevels(x, y, a, b),
-								colorscale: 'Viridis',
-								zmin: Math.min.apply(null, contourLevels(x, y, a, b).flat),
-								zmax: Math.max.apply(null, contourLevels(x, y, a, b).flat),
-						}];
-
-						// Definição das opções de layout dos gráficos
-						var layout3d = {
-								title: 'Gráfico 3D Interativo',
-								xaxis_title: 'X',
-								yaxis_title: 'Y',
-								zaxis_title: 'Z',
-								scene: {
-										camera: {
-												eye: { x: 1.2, y: 1.2, z: 0.7 }
-										}
-								}
-						};
-
-						var layoutContour = {
-								title: 'Gráfico de Curvas de Nível',
-								xaxis_title: 'X',
-								yaxis_title: 'Y',
-								scene: {
-										camera: {
-												eye: { x: 1.2, y: 1.2, z: 0.7 }
-										}
-								}
-						};
-
-						// Atualização dos gráficos
-						Plotly.react('plotly-graph-3d', data3d, layout3d);
-						Plotly.react('plotly-graph-contour', dataContour, layoutContour);
-				}
-
-				// Atualizar os gráficos inicialmente
-				updateGraph();
-		</script>
+		// Atualizar valor da quantidade de curvas de nível ao mover a barra de deslizar
+		function updateSliderValue() {
+			var sliderValue = document.getElementById('curves').value;
+			document.getElementById('curves-value').value = sliderValue;
+			updateGraph();
+		}
+	</script>
 </body>
 </html>
