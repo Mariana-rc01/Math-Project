@@ -54,17 +54,17 @@ function createCuts(x, y, a, b, c_values, c, d, e, f) {
 
 // Função para criar o corte único no gráfico 2D
 function createSingleCut(x, y, a, b, c, d, e, f, level) {
-		var Z = contourLevels(x, y, a, b, c, d, e, f);
-		var trace = {
-				type: 'scatter',
-				mode: 'lines',
-				x: y,
-				y: Z.map((row) => row.map((val) => (val >= level ? level : NaN))),
-				line: { color: 'black' },
-				legendgroup: 'curves',
-				showlegend: false,
-		};
-		return trace;
+	var Z = contourLevels(x, y, a, b, c, d, e, f);
+	var trace = {
+		type: 'scatter',
+		mode: 'lines',
+		x: y,
+		y: Z.map((row) => row.map((val) => (val >= level ? level : NaN))),
+		line: { color: 'black' },
+		legendgroup: 'curves',
+		showlegend: false,
+	};
+	return trace;
 }
 
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
