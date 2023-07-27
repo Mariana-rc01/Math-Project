@@ -6,48 +6,157 @@
 		<link rel="stylesheet" href="static/css/main.css"/>
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 		<style>
-				/* Estilo para a div do gráfico 3D */
-				#plotly-graph-3d {
-						width: 70%;
-						float: left;
-				}
+			body {
+				background-color: white;
+				margin: 0;
+			}
+			#container {
+				width: 800px;
+				margin: auto;
+				text-align: center;
+			}
+			#graphDiv {
+				width: 800px;
+				height: 650px;
+				margin: auto;
+			}
+			#controls {
+				margin-top: 20px;
+			}
+			.coordinates {
+				margin-top: 10px;
+			}
+			.input-field {
+				display: flex;
+				align-items: center;
+				margin-bottom: 5px;
+			}
+			.input-label {
+				margin-right: 10px;
+			}
+			.input-value {
+				width: 60px;
+				padding: 2px;
+			}
 
-				/* Estilo para a div do gráfico de curvas de nível */
-				#plotly-graph-contour {
-						width: 30%;
-						float: right;
-				}
+			/* Style for the sliders */
+			.slider {
+				background-color: rgb(169, 206, 238); /* Set the background color of the blue box */
+				padding: 10px;
+				border-radius: 5px;
+				margin-bottom: 10px;
+			}
 
-				/* Estilo para a barra de deslizar */
-				.slider-container {
-						display: flex;
-						align-items: center;
-				}
+			/* Style for the slider input itself */
+			.slider input[type="range"] {
+				appearance: none; /* Hide the default slider styling */
+				width: 100%; /* Set the width of the slider input to 100% */
+				height: 5px; /* Set the height of the slider bar */
+				background: white; /* Set the background color of the slider bar to white */
+				outline: none; /* Remove the default outline on focus */
+				border-radius: 5px; /* Round the corners of the slider bar */
+			}
 
-				.slider {
-						flex: 1;
-				}
+			/* Style for the slider thumb (handle) */
+			.slider input[type="range"]::-webkit-slider-thumb {
+				appearance: none; /* Hide the default slider thumb */
+				width: 15px; /* Set the width of the slider thumb */
+				height: 15px; /* Set the height of the slider thumb */
+				background: rgb(74, 150, 215); /* Set the background color of the slider thumb (you can change this color) */
+				border-radius: 50%; /* Make the slider thumb round */
+				cursor: pointer; /* Change the cursor to a pointer on hover */
+			}
 
-				.slider-value {
-						width: 40px;
-						margin-left: 10px;
-						text-align: center;
-				}
+			.slider input[type="range"]::-moz-range-thumb {
+				appearance: none;
+				width: 15px;
+				height: 15px;
+				background: rgb(74, 150, 215);
+				border-radius: 50%;
+				cursor: pointer;
+			}
 
-				.input-container {
-					display: flex;
-					align-items: center;
-					margin-bottom: 10px;
-				}
+			#plotly-graph-3d {
+					width: 70%;
+					float: left;
+			}
+			#plotly-graph-contour {
+					width: 30%;
+					float: right;
+			}
 
-				.input-container label,
-				.input-container input {
-					margin-right: 10px;
-				}
+			.modebar-container {
+			display: none !important;
+		}
+			.input-container {
+				display: flex;
+				align-items: center;
+				margin-bottom: 10px;
+			}
 
-				.input-container input:last-child {
-					margin-right: 0;
-				}
+			.input-container label,
+			.input-container input {
+				margin-right: 10px;
+			}
+			.input-container input:last-child {
+				margin-right: 0;
+			}
+
+			/* Style for radio buttons */
+			.radio-option {
+				position: relative;
+				padding-left: 30px;
+				margin-bottom: 10px;
+				cursor: pointer;
+				font-size: 16px;
+				user-select: none;
+			}
+
+			/* Hide default radio input */
+			.radio-option input {
+				position: absolute;
+				opacity: 0;
+				cursor: pointer;
+			}
+
+			/* Create custom radio indicators (circles) */
+			.checkmark {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 20px;
+				width: 20px;
+				background-color: #fff;
+				border: 2px solid #0074d9;
+				border-radius: 50%;
+			}
+
+			/* Show the custom radio indicator when the radio input is checked */
+			.radio-option input:checked ~ .checkmark {
+				background-color: #0074d9;
+			}
+
+			/* Create a custom checkmark (inside the custom radio indicator) */
+			.checkmark::after {
+				content: "";
+				position: absolute;
+				display: none;
+			}
+
+			/* Show the custom checkmark when the radio input is checked */
+			.radio-option input:checked ~ .checkmark::after {
+				display: block;
+			}
+
+			/* Style the custom checkmark */
+			.radio-option .checkmark::after {
+				top: 6px;
+				left: 6px;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #fff;
+			}
 		</style>
 	</head>
 	<body>
@@ -138,7 +247,8 @@
 
 										</article>
 
-										<h1>Gráficos 3D Interativos com Curvas de Nível</h1>
+										<h2>Gráficos 3D Interativos com Curvas de Nível</h2>
+										<h1>g(x,y) = ax² + by² + cxy + dx + ey + f</h1>
 										<!-- Formulário para entrada de valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível -->
 										<form oninput="updateGraph()">
 											<div class="input-container">
@@ -159,28 +269,33 @@
 												<label for="f">Valor de f:</label>
 												<input type="number" id="f" step="0.1" value="0" onchange="checkValue(this)">
 											</div>
-										<div class="slider-container">
-														<label for="curves">Quantidade de Curvas de Nível:</label>
-														<input
-																type="radio"
-																id="single-curve"
-																name="curves-option"
-																value="single"
-																checked
-																onchange="toggleCurveOptions()"
-														>
-														<label for="single-curve">Apenas uma curva de nível</label>
-														<input
-																type="radio"
-																id="many-curves"
-																name="curves-option"
-																value="many"
-																onchange="toggleCurveOptions()"
-														>
-														<label for="many-curves">Muitas curvas de nível</label>
-														<br>
-														<div id="level-slider-container">
-																<label for="level">Valor da Curva de Nível:</label>
+											<div class="input-container">
+												<label for="curves">Quantidade de Curvas de Nível:</label>
+												<div class="radio-option" onclick="selectOption('single-curve')">
+													<input
+														type="radio"
+														id="single-curve"
+														name="curves-option"
+														value="single"
+														checked
+													/>
+													<span class="checkmark"></span>
+													<label for="single-curve">Apenas uma curva de nível</label>
+												</div>
+												<div class="radio-option" onclick="selectOption('many-curves')">
+													<input
+														type="radio"
+														id="many-curves"
+														name="curves-option"
+														value="many"
+													/>
+													<span class="checkmark"></span>
+													<label for="many-curves">Muitas curvas de nível</label>
+												</div>
+											</div>
+										<div class="slider">
+											<div class="input-field">
+																<label for="level">Contour Line Value:</label>
 																<input
 																		type="range"
 																		id="level"
@@ -189,8 +304,7 @@
 																		max="40"
 																		step="0.1"
 																		value="2"
-																		oninput="updateSliderValue()"
-																>
+																		oninput="updateSliderValue()">
 																<input
 																		type="number"
 																		id="level-value"
@@ -199,11 +313,13 @@
 																		max="40"
 																		step="0.1"
 																		value="2"
-																		oninput="updateSliderValue()"
-																>
+																		oninput="updateSliderValue()">
 														</div>
-														<div id="curves-slider-container">
-																<label for="curves">Quantidade de Curvas de Nível:</label>
+														</div>
+														</div>
+										<div class="slider">
+														<div class="input-field">
+																<label for="curves">Number of Contour Lines:</label>
 																<input
 																		type="range"
 																		id="curves"
@@ -211,8 +327,7 @@
 																		min="1"
 																		max="50"
 																		value="10"
-																		oninput="updateSliderValue()"
-																>
+																		oninput="updateSliderValue()">
 																<input
 																		type="number"
 																		id="curves-value"
@@ -220,8 +335,7 @@
 																		min="1"
 																		max="50"
 																		value="10"
-																		oninput="updateSliderValue()"
-																>
+																		oninput="updateSliderValue()">
 														</div>
 												</div>
 										</form>

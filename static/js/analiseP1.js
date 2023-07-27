@@ -118,6 +118,7 @@ function updateGraph() {
 								colorscale: 'Viridis',
 								zmin: minZ,
 								zmax: maxZ,
+								showscale: false, // Disable colorscale
 						},
 						singleCut,
 				];
@@ -140,6 +141,7 @@ function updateGraph() {
 								colorscale: 'Viridis',
 								zmin: minZ,
 								zmax: maxZ,
+								showscale: false, // Disable colorscale
 						},
 				].concat(cuts);
 		}
@@ -158,6 +160,7 @@ function updateGraph() {
 						y: x,
 						z: contourLevels(x, y, a, b, c, d, e, f),
 						colorscale: 'Viridis',
+						showscale: false, // Disable colorscale
 				},
 		].concat(planes);
 
@@ -167,6 +170,7 @@ function updateGraph() {
 				xaxis_title: 'Y',
 				yaxis_title: 'X',
 				zaxis_title: 'Z',
+				margin: { l: 0, r: 0, b: 0, t: 40 },
 				scene: {
 						camera: {
 								eye: { x: 1.2, y: 1.2, z: 0.7 },
@@ -178,6 +182,7 @@ function updateGraph() {
 				title: 'Gráfico de Curvas de Nível',
 				xaxis_title: 'Y',
 				yaxis_title: 'X',
+				margin: { l: 0, r: 0, b: 0, t: 40 },
 				yaxis: {
 						type: 'linear',
 						range: [-5, 5],
@@ -209,34 +214,50 @@ function updateSliderValue() {
 		updateGraph();
 }
 
-// Função para alternar entre a opção de "Apenas uma curva de nível" e "Muitas curvas de nível"
-function toggleCurveOptions() {
-		var curvesOption = document.querySelector('input[name="curves-option"]:checked');
-		var isSingleCurveOption = curvesOption.value === 'single';
-		var levelSliderContainer = document.getElementById('level-slider-container');
-		var curvesSliderContainer = document.getElementById('curves-slider-container');
-
-		if (isSingleCurveOption) {
-				levelSliderContainer.style.display = 'block';
-				curvesSliderContainer.style.display = 'none';
-		} else {
-				levelSliderContainer.style.display = 'none';
-				curvesSliderContainer.style.display = 'block';
-		}
-		updateGraph();
+function selectOption(optionId) {
+	document.getElementById(optionId).checked = true;
+	toggleCurveOptions();
+	updateGraph();
 }
 
-// Check if the input value is empty and set the default values
+// Função para alternar entre a opção de "Apenas uma curva de nível" e "Muitas curvas de nível"
+function toggleCurveOptions() {
+	var singleCurveOption = document.getElementById('single-curve');
+	var levelSlider = document.getElementById('level');
+	var levelValueInput = document.getElementById('level-value');
+	var manyCurvesOption = document.getElementById('many-curves');
+	var curvesSlider = document.getElementById('curves');
+	var curvesValueInput = document.getElementById('curves-value');
+
+	if (singleCurveOption.checked) {
+		// Show only the "Valor da Curva de Nível" slider and hide "Quantidade de Curvas de Nível" slider
+		levelSlider.style.display = 'block';
+		levelValueInput.style.display = 'block';
+		curvesSlider.style.display = 'none';
+		curvesValueInput.style.display = 'none';
+	} else {
+		// Show only the "Quantidade de Curvas de Nível" slider and hide "Valor da Curva de Nível" slider
+		levelSlider.style.display = 'none';
+		levelValueInput.style.display = 'none';
+		curvesSlider.style.display = 'block';
+		curvesValueInput.style.display = 'block';
+	}
+}
+
 function checkValue(input) {
-		if (input.value === '') {
-				if (input.id === 'a' || input.id === 'b') {
-						input.value = 1;
-				} else {
-						input.value = 0;
-				}
+	if (input.value === '') {
+		// If the input value is empty, set it to 1 for 'a' and 'b', and 0 for the rest
+		if (input.id === 'a' || input.id === 'b') {
+			input.value = 1;
+		} else {
+			input.value = 0;
 		}
-		updateGraph();
+	}
+	updateGraph();
 }
 
 // Atualizar os gráficos inicialmente
 updateGraph();
+
+document.getElementById('single-curve').checked = true;
+toggleCurveOptions();
