@@ -14,18 +14,19 @@ if opcao == "Uniform":
     numero0 = st.sidebar.number_input('Number of Samples:', min_value=1, value=2, step=5)
     st.sidebar.write("1000 random numbers will be generated between:")
     values = st.sidebar.slider('Select a range of values to sample', -100, 100, (-10, 10))
+    media_un = (values[0] + values[1]) / 2
     means = []
     np.random.seed(999)
     for i in range(numero0):
         rng = np.random.default_rng()
-        media = np.mean(rng.integers(low=values[0], high=values[1]+1, size=1000))
+        media = np.mean(rng.integers(low=values[0], high=values[1]+1, size=100))
         means.append(media)
-    x1 = np.linspace(norm.ppf(0.001, np.mean(means), np.std(means)),
-                     norm.ppf(0.999, np.mean(means), np.std(means)), 1000)
-    y_nor = norm.pdf(x1, np.mean(means), np.std(means))
+    x1 = np.linspace(norm.ppf(0.001, media_un, np.std(means)),
+                     norm.ppf(0.999, media_un, np.std(means)), 1000)
+    y_nor = norm.pdf(x1, media_un, np.std(means))
     fig0, ax0 = plt.subplots()
     ax0.hist(means, density=True, bins="auto")
-    ax0.plot(x1, y_nor, "r--", alpha=0.5, label='Gaussian')
+    ax0.plot(x1, y_nor, "r--", alpha=0.5, label='Normal')
     ax0.set_ylabel("Density")
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
     st.pyplot(fig0)
@@ -36,14 +37,15 @@ if opcao == "Bernoulli":
     p = st.sidebar.number_input('Probability:', min_value=0.0, max_value=1.0, value=0.2, step=0.1)
     d = bernoulli(p)
     res = []
+    media = numero*p
     for i in range(1000):
         res.append(d.rvs(numero).sum())
     fig, ax = plt.subplots()
     nn, bins, empty = ax.hist(res, bins='auto', density=True)
-    x1 = np.linspace(norm.ppf(0.001, np.mean(res), np.std(res)),
-                     norm.ppf(0.999, np.mean(res), np.std(res)), 1000)
-    y_nor = norm.pdf(x1, np.mean(res), np.std(res))
-    ax.plot(x1, y_nor, "r--", alpha=0.5, label='Gaussian')
+    x1 = np.linspace(norm.ppf(0.001, media, np.std(res)),
+                     norm.ppf(0.999, media, np.std(res)), 1000)
+    y_nor = norm.pdf(x1, media, np.std(res))
+    ax.plot(x1, y_nor, "r--", alpha=0.5, label='Normal')
     ax.set_ylabel("Density")
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
     fig.tight_layout()
@@ -60,7 +62,7 @@ if opcao == "Poisson":
     y_nor = norm.pdf(x1, np.mean(res), np.std(res))
     fig2, ax2 = plt.subplots()
     ax2.hist(res, bins="auto", density=True)
-    ax2.plot(x1, y_nor, "r--", alpha=0.5, label='Gaussian')
+    ax2.plot(x1, y_nor, "r--", alpha=0.5, label='Normal')
     ax2.set_ylabel("Density")
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
     fig2.tight_layout()
@@ -78,7 +80,7 @@ if opcao == "Exponential":
     y_nor = norm.pdf(x1, np.mean(ss), np.std(ss))
     fig3, ax3 = plt.subplots()
     ax3.hist(ss, density=True, bins="auto")
-    ax3.plot(x1, y_nor, "r--", alpha=0.5, label='Gaussian')
+    ax3.plot(x1, y_nor, "r--", alpha=0.5, label='Normal')
     ax3.set_ylabel("Density")
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
     st.pyplot(fig3)
@@ -96,7 +98,7 @@ if opcao == "Cauchy":
     y_nor = norm.pdf(x1, np.mean(cc), np.std(cc))
     fig4, ax4 = plt.subplots()
     ax4.hist(cc, density=True, bins="auto")
-    ax4.plot(x1, y_nor, "r--", alpha=0.5, label='Gaussian')
+    ax4.plot(x1, y_nor, "r--", alpha=0.5, label='Normal')
     ax4.set_ylabel("Density")
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
     st.pyplot(fig4)

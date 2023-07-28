@@ -21,14 +21,14 @@ if opcao == "Normal":
     mu = st.sidebar.number_input('Mean:', step=0.5)
     sd = st.sidebar.number_input('Standard Deviation:', min_value=0.0, value=1.0, step=0.5)
     nor1 = np.random.normal(mu, sd, size=1000)
-    nor = np.linspace(norm.ppf(0.0000001, mu, sd), norm.ppf(0.9999999, mu, sd), 1000)
+    nor = np.linspace(norm.ppf(0.00000000001, mu, sd), norm.ppf(0.99999999999, mu, sd), 100)
 
     fig, ax = plt.subplots()
     ax.set_ylabel("Probability Density")
     if curve:
-        ax.plot(nor, norm.pdf(nor, mu, sd), 'r-', lw=3, alpha=0.7, label='Gaussian')
+        ax.plot(nor, norm.pdf(nor, mu, sd), 'r-', lw=3, alpha=0.7, label='Normal')
     if histog:
-        ax.hist(nor1, 40, range=(-9, 9), density=True, alpha=0.6)
+        ax.hist(nor1, 40, range=(-8, 8), density=True, alpha=0.6)
     plt.xlim(-9, 9)
     plt.ylim(0, 0.8)
     if mm:
@@ -45,7 +45,7 @@ elif opcao == "Exponential":
     lambd = st.sidebar.number_input('Lambda:', min_value=0.1, value=2.0, step=0.25)
     beta = 1.0 / lambd
     e = np.random.exponential(scale=beta, size=1000)
-    ex = np.linspace(expon.ppf(0.0000001, scale=beta), expon.ppf(0.9999999, scale=beta), 1000)
+    ex = np.linspace(expon.ppf(0.0000001, scale=beta), expon.ppf(0.9999999, scale=beta), 100)
 
     fig2, ax2 = plt.subplots()
     ax2.set_ylabel("Probability Density")
@@ -92,9 +92,9 @@ elif opcao == "T student":
     curve = st.sidebar.checkbox('Curve', value=True)
     mm = st.sidebar.checkbox('Mean/Median')
 
-    df2 = st.sidebar.number_input('Degrees of Freedom:', min_value=1, value=3, step=1)
+    df2 = st.sidebar.number_input('Degrees of Freedom:', min_value=1, value=4, step=1)
     ts1 = np.random.standard_t(df2, size=100)
-    ts = np.linspace(t.ppf(0.00000001, df2), t.ppf(0.99999999, df2), 100000)
+    ts = np.linspace(t.ppf(0.000001, df2), t.ppf(0.999999, df2), 100000)
     fig4, ax4 = plt.subplots()
     ax4.set_ylabel("Probability Density")
     if histog:
@@ -105,7 +105,7 @@ elif opcao == "T student":
     plt.ylim(0, 0.4)
     if mm:
         plt.axvline(x=t.mean(df2, loc=0, scale=1), color='y', ls="-.", label='Mean and Median')
-        plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
+    plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
 
     st.pyplot(fig4)
 
@@ -114,17 +114,18 @@ elif opcao == "Binomial":
 
     n = round(st.sidebar.number_input('N Trials:', min_value=0, value=6, step=1))
     p = st.sidebar.number_input('Probability of Success:',
-                                min_value=0.0, max_value=1.0, value=0.5, step=0.1)
+                                min_value=0.0, max_value=1.0, value=0.4, step=0.1)
     # rep = round(st.sidebar.number_input('Quantos Ensaios:', min_value=1, value=1, step=1))
     # s = np.random.binomial(n, p, rep)
 
     x = range(0, n + 1)  # valores de x =0,1,2,3..ou n
     dados_binom = binom.pmf(x, n, p)  # distribuição dos resultados
     fig5, ax5 = plt.subplots()
-    ax5.bar(x, dados_binom)
+    ax5.plot(x, dados_binom, "bD")
     ax5.set_ylabel("Probability Mass")
-    plt.plot(x, dados_binom, color='red', label='Binomial')
-    plt.hlines(xmin=-1, xmax=x, y=dados_binom, color="lightgray", linestyles='dotted')
+    ax5.vlines(x, 0, dados_binom, colors='blue', lw=7, alpha=0.3)
+    ax5.vlines(x, 0, dados_binom, colors='k', linestyles='-.', lw=1)
+    plt.hlines(xmin=-1, xmax=x, y=dados_binom, color="lightgray", linestyles='dotted', alpha=0.5)
     plt.axvline(x=n*p, color='y', ls="-.", label='Mean')
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
 
@@ -134,19 +135,18 @@ elif opcao == "Poisson":
     st.header("Probability Mass Function:")
 
     n2 = st.sidebar.number_input('N total:', min_value=0, value=10, step=1)
-    lambd2 = st.sidebar.number_input('Lambda/mean:', min_value=0.1, value=5.0, step=0.25)
+    lambd2 = st.sidebar.number_input('Lambda/mean:', min_value=0.1, value=4.5, step=0.25)
 
     x1 = range(0, n2+1)
-    # x1 = np.arange(poisson.ppf(0.01, lambd2), poisson.ppf(0.99, lambd2))
-
     dados_poisson = poisson.pmf(x1, mu=lambd2)
 
     fig6, ax6 = plt.subplots()
-    ax6.bar(x1, dados_poisson)
+    ax6.plot(x1, dados_poisson, "bD")
+    ax6.vlines(x1, 0, dados_poisson, colors='blue', lw=7, alpha=0.3)
+    ax6.vlines(x1, 0, dados_poisson, colors='k', linestyles='-.', lw=1)
     ax6.set_ylabel("Probability Mass")
-    plt.plot(x1, dados_poisson, color='red', label='Poisson')
     plt.axvline(x=np.mean(lambd2), color='y', ls="-.", label='Mean')
-    plt.hlines(xmin=-1, xmax=x1, y=dados_poisson, color="lightgray", linestyles='dotted')
+    plt.hlines(xmin=-1, xmax=x1, y=dados_poisson, color="lightgray", linestyles='dotted', alpha=0.5)
     plt.legend(bbox_to_anchor=(1.0, 1), loc='upper left')
 
     st.pyplot(fig6)
