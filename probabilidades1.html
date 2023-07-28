@@ -103,6 +103,106 @@
 
 										</article>
 
+									<script>
+										// Add the necessary imports for JavaScript
+// (Assuming you have imported necessary libraries separately)
+
+// Create a function to handle the Streamlit app
+function main() {
+  const opcao = st.sidebar.selectbox("Distribution", ["Uniform", "Bernoulli", "Poisson", "Exponential", "Cauchy"]);
+
+  if (opcao === "Uniform") {
+    const numero0 = st.sidebar.number_input("Number of Samples:", { min: 1, value: 2, step: 5 });
+    st.sidebar.write("1000 random numbers will be generated between:");
+    const values = st.sidebar.slider("Select a range of values to sample", -100, 100, [-10, 10]);
+    const media_un = (values[0] + values[1]) / 2;
+    const means = [];
+    const seed = 999;
+    for (let i = 0; i < numero0; i++) {
+      const rng = new np.random.default_rng(seed);
+      const media = np.mean(rng.integers(values[0], values[1] + 1, { size: 100 }));
+      means.push(media);
+    }
+    const x1 = np.linspace(norm.ppf(0.001, media_un, np.std(means)),
+      norm.ppf(0.999, media_un, np.std(means)), 1000);
+    const y_nor = norm.pdf(x1, media_un, np.std(means));
+
+    const fig0 = plt.subplots()[0];
+    const ax0 = fig0.add_subplot(1, 1, 1);
+    ax0.hist(means, { density: true, bins: "auto" });
+    ax0.plot(x1, y_nor, "r--", { alpha: 0.5, label: "Normal" });
+    ax0.set_ylabel("Density");
+    plt.legend({ bbox_to_anchor: [1.0, 1], loc: "upper left" });
+    st.pyplot(fig0);
+  }
+
+  if (opcao === "Bernoulli") {
+    const numero = st.sidebar.number_input("Number of Samples:", { min: 1, value: 2, step: 5 });
+    const p = st.sidebar.number_input("Probability:", { min: 0.0, max: 1.0, value: 0.2, step: 0.1 });
+    const d = bernoulli(p);
+    const res = [];
+    const media = numero * p;
+    for (let i = 0; i < 1000; i++) {
+      res.push(d.rvs(numero).reduce((acc, curr) => acc + curr, 0));
+    }
+    const fig = plt.subplots()[0];
+    const ax = fig.add_subplot(1, 1, 1);
+    const { nn, bins, empty } = ax.hist(res, "auto", { density: true });
+    const x1 = np.linspace(norm.ppf(0.001, media, np.std(res)),
+      norm.ppf(0.999, media, np.std(res)), 1000);
+    const y_nor = norm.pdf(x1, media, np.std(res));
+    ax.plot(x1, y_nor, "r--", { alpha: 0.5, label: "Normal" });
+    ax.set_ylabel("Density");
+    plt.legend({ bbox_to_anchor: [1.0, 1], loc: "upper left" });
+    fig.tight_layout();
+    st.pyplot(fig);
+  }
+
+  if (opcao === "Poisson") {
+    const numero2 = st.sidebar.number_input("Number of Samples:", { min: 1, value: 2, step: 5 });
+    const lambd = st.sidebar.number_input("Lambda:", { min: 0.1, value: 5.0, step: 0.25 });
+    const d = poisson(lambd);
+    const res = [];
+    for (let i = 0; i < numero2; i++) {
+      res.push(d.rvs({ size: numero2 }).reduce((acc, curr) => acc + curr, 0) / numero2);
+    }
+    const x1 = np.linspace(norm.ppf(0.001, np.mean(res), np.std(res)),
+      norm.ppf(0.999, np.mean(res), np.std(res)), 1000);
+    const y_nor = norm.pdf(x1, np.mean(res), np.std(res));
+
+    const fig2 = plt.subplots()[0];
+    const ax2 = fig2.add_subplot(1, 1, 1);
+    ax2.hist(res, { bins: "auto", density: true });
+    ax2.plot(x1, y_nor, "r--", { alpha: 0.5, label: "Normal" });
+    ax2.set_ylabel("Density");
+    plt.legend({ bbox_to_anchor: [1.0, 1], loc: "upper left" });
+    fig2.tight_layout();
+    st.pyplot(fig2);
+  }
+
+  if (opcao === "Exponential") {
+    const numero3 = st.sidebar.number_input("Number of Samples:", { min: 1, value: 2, step: 5 });
+    const lambd2 = st.sidebar.number_input("Lambda:", { min: 0.1, value: 5.0, step: 0.25 });
+    const e = expon(lambd2);
+    const ss = [];
+    for (let i = 0; i < numero3; i++) {
+      ss.push(e.rvs({ size: numero3 }).reduce((acc, curr) => acc + curr, 0) / numero3);
+    }
+    const x1 = np.linspace(norm.ppf(0.001, np.mean(ss), np.std(ss)),
+      norm.ppf(0.999, np.mean(ss), np.std(ss)), 1000);
+    const y_nor = norm.pdf(x1, np.mean(ss), np.std(ss));
+
+    const fig3 = plt.subplots()[0];
+    const ax3 = fig3.add_subplot(1, 1, 1);
+    ax3.hist(ss, { density: true, bins: "auto" });
+    ax3.plot(x1, y_nor, "r--", { alpha: 0.5, label: "Normal" });
+    ax3.set_ylabel("Density");
+    plt.legend({ bbox_to_anchor: [1.0, 1], loc: "upper left" });
+    st.pyplot(fig3);
+  }
+									</script>
+
+
 								</div>
 							</div>
 						</div>
