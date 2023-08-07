@@ -74,8 +74,8 @@ function updateGraph() {
 		var isSingleCurveOption = singleCurveOption.checked;
 
 		// Obter os valores de a, b, e quantidade de curvas de nível ou valor da curva de nível do formulário
-		var a = parseFloat(document.getElementById('a').value) || 1; // Valor padrão de 1 para 'a'
-		var b = parseFloat(document.getElementById('b').value) || 1; // Valor padrão de 1 para 'b'
+		var a = parseFloat(document.getElementById('a').value) || 0; // Valor padrão de 1 para 'a'
+		var b = parseFloat(document.getElementById('b').value) || 0; // Valor padrão de 1 para 'b'
 		var c = parseFloat(document.getElementById('c').value) || 0; // Valor padrão de 0 para 'c'
 		var d = parseFloat(document.getElementById('d').value) || 0; // Valor padrão de 0 para 'd'
 		var e = parseFloat(document.getElementById('e').value) || 0; // Valor padrão de 0 para 'e'
