@@ -151,7 +151,7 @@ function createReferenceAxes() {
 		updatePointPosition();
 	});
 
-	const thetaLineMaterial = new THREE.LineBasicMaterial({ color: "green"});
+	const thetaLineMaterial = new THREE.LineBasicMaterial({ color: "darkblue"});
 	const thetaLineGeometry = new THREE.BufferGeometry().setFromPoints([
 		new THREE.Vector3(0, 0, 0),
 		new THREE.Vector3(controls.x, 0, controls.z),
@@ -164,19 +164,13 @@ function createReferenceAxes() {
 	const thetaCurve = new THREE.Line(new THREE.BufferGeometry(), thetaCurveMaterial);
 	scene.add(thetaCurve);
 
-	// Linha Phi
-	const phiLineMaterial = new THREE.LineBasicMaterial({ color: "red" });
-	const phiLineGeometry = new THREE.BufferGeometry().setFromPoints([
-		new THREE.Vector3(controls.x, controls.y, controls.z),
-		new THREE.Vector3(0, Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2), 0),
-	]);
-	const phiLine = new THREE.Line(phiLineGeometry, phiLineMaterial);
-	scene.add(phiLine);
+	// Phi
 
-  const phiCurveMaterial = new THREE.LineBasicMaterial({ color: "red" });
-  const phiCurvePoints = [];
-  const phiCurve = new THREE.Line(new THREE.BufferGeometry(), phiCurveMaterial);
-  scene.add(phiCurve);
+	const phiCurveMaterial = new THREE.LineBasicMaterial({ color: "red" });
+	const phiCurveGeometry = new THREE.BufferGeometry();
+	const phiCurvePoints = [];
+	const phiCurve = new THREE.Line(phiCurveGeometry, phiCurveMaterial);
+	scene.add(phiCurve);
 
 	function formatFraction(value) {
 		const piFraction = (value / Math.PI).toFixed(2);
@@ -240,28 +234,36 @@ function createReferenceAxes() {
 		}
 		thetaCurve.geometry.setFromPoints(thetaCurvePoints);
 
-		phiLine.geometry.setFromPoints([
-      new THREE.Vector3(controls.x, controls.y, controls.z),
-      new THREE.Vector3(0, Math.sqrt(controls.x ** 2 + controls.y ** 2 + controls.z ** 2), 0),
-    ]);
-
+		// Curva de phi
 		phiCurvePoints.length = 0; // Limpar os pontos anteriores
-		phiCurvePoints.push(new THREE.Vector3(0, ro, 0)); // Adicionar ponto inicial (igual a P)
-		const q = Math.sqrt(controls.x ** 2 + controls.z ** 2);
-		for (let angle = 0; angle <= phi; angle += 0.01) {
-			const x = Math.cos(angle) * q;
-			const z = Math.sin(angle) * q;
-			if (controls.x <= 0) {
-				phiCurvePoints.push(new THREE.Vector3(-z, x, 0)); // Coordenadas atualizadas
-			}
-			else {
-				phiCurvePoints.push(new THREE.Vector3(z, x, 0)); // Coordenadas atualizadas
-			}
+
+		const p0 = new THREE.Vector3(controls.x, controls.y, controls.z); // Ponto P
+		const poleN = new THREE.Vector3(0, ro, 0); // Polo norte
+
+		const segments = 100; // Número de segmentos para a curva
+
+		for (let i = 0; i <= segments; i++) {
+			const t = i / segments;
+			const point = getPointOnSphereCurve(p0, poleN, t);
+			phiCurvePoints.push(point);
 		}
+
 		phiCurve.geometry.setFromPoints(phiCurvePoints);
 
+		function getPointOnSphereCurve(p0, pole, t) {
+			const sphereNormal = p0.clone().normalize();
+			const poleNormal = pole.clone().normalize();
 
-		document.getElementById("coordinates").innerText = `P ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
+			const rotationAxis = new THREE.Vector3().crossVectors(sphereNormal, poleNormal).normalize();
+			const rotationAngle = Math.acos(sphereNormal.dot(poleNormal));
+
+			const q = new THREE.Quaternion().setFromAxisAngle(rotationAxis, rotationAngle * t);
+			const pointOnSphere = sphereNormal.clone().applyQuaternion(q).multiplyScalar(ro);
+
+			return pointOnSphere;
+		}
+
+		document.getElementById("coordinates").innerText = `P ≡ (ρ,θ,φ) ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 
 		renderer.render(scene, camera);
 	}
