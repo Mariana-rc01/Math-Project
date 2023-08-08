@@ -246,13 +246,8 @@ function toggleCurveOptions() {
 
 function checkValue(input) {
 	if (input.value === '') {
-		// If the input value is empty, set it to 1 for 'a' and 'b', and 0 for the rest
-		if (input.id === 'a' || input.id === 'b') {
-			input.value = 1;
-		} else {
 			input.value = 0;
 		}
-	}
 	updateGraph();
 }
 
