@@ -105,45 +105,11 @@ function updateGraph() {
 				// For the single curve option, use the level value to update the contour plane
 				c_values.push(level);
 
-				// Create the single cut for the 2D contour graph
-				var singleCut = createSingleCut(x, y, a, b, c, d, e, f, level);
-
-				// Criação dos dados dos gráficos
-				var dataContour = [
-						{
-								type: 'contour',
-								x: y,
-								y: x,
-								z: contourLevels(x, y, a, b, c, d, e, f),
-								colorscale: 'Viridis',
-								zmin: minZ,
-								zmax: maxZ,
-								showscale: false, // Disable colorscale
-						},
-						singleCut,
-				];
 		} else {
 				// For the many curves option, generate c_values based on the number of curves
 				for (var k = 0; k < curves; k++) {
 						c_values.push(minZ + (k / (curves - 1)) * (maxZ - minZ));
 				}
-
-				// Criação dos cortes horizontais no gráfico 2D
-				var cuts = createCuts(x, y, a, b, c_values, c, d, e, f);
-
-				// Criação dos dados dos gráficos
-				var dataContour = [
-						{
-								type: 'contour',
-								x: y,
-								y: x,
-								z: contourLevels(x, y, a, b, c, d, e, f),
-								colorscale: 'Viridis',
-								zmin: minZ,
-								zmax: maxZ,
-								showscale: false, // Disable colorscale
-						},
-				].concat(cuts);
 		}
 
 		// Criação dos planos de curvas de nível
@@ -177,6 +143,48 @@ function updateGraph() {
 						},
 				},
 		};
+
+		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
+		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
+		var dataContour = [
+			{
+					type: 'contour',
+					x: y, // Use os mesmos valores de y do gráfico 3D
+					y: x, // Use os mesmos valores de x do gráfico 3D
+					z: Z, // Use os mesmos valores de Z do gráfico 3D
+					colorscale: 'Viridis', // Use a colorscale Viridis para o degradê de cores
+					showscale: false,
+					hoverinfo: 'none',
+					contours: {
+						showlines: false, // Não mostrar as linhas entre as cores
+				},
+			},
+		];
+
+		// Adicione linhas de contorno individuais para cada nível
+		for (var level of c_values) {
+			var contourLines = {
+					type: 'contour',
+					x: y, // Use os mesmos valores de y do gráfico 3D
+					y: x, // Use os mesmos valores de x do gráfico 3D
+					z: contourLevels(x, y, a, b, c, d, e, f), // Use a função de cálculo para obter Z
+					colorscale: 'Viridis',
+					showscale: false,
+					hoverinfo: 'none',
+					contours: {
+							start: level,
+							end: level,
+							size: 0,
+							coloring: 'lines',
+					},
+					line: {
+							color: 'black',
+							width: 2,
+					},
+			};
+
+			dataContour.push(contourLines);
+		}
 
 		var layoutContour = {
 				title: 'Gráfico de Curvas de Nível',
