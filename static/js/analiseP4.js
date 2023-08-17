@@ -140,9 +140,3 @@ function checkValue(input) {
 // Atualizar os gráficos inicialmente
 updateGraph();
 
-/* Temos depois então um ponto P com coordenadas (p,q), este ponto P está na projeção abaixo do gráfico f, sendo a interseção do gráfico f com g(x,y)=0
-Imaginando agora que temos f(x,y) = x²+y² e g(x,y) = 3x²+2y², desenhámos vetores u e v, sendo que u = (2p,2q), sendo p e q coordenadas de P e os coeficientes a derivada de x² e y², e desenhámos v=(6p,4q), sendo 6 e 4 a derivada de 3x² e 2y²
-Não é necessário haver a opção de uma ou muitas curvas de nível, visto que é só para mostrar a projeção da interseção do gráfico f com g(x,y)=0
-O objetivo é haver uma barra que possámos andar com ela que faz com que o ponto P se mexa à volta da curva de nível projetada e que apareçam os valores de p e q enquanto se move, não é suposto inserirmos p e q
-É necessário acrescentares a função g também com valores variáveis e desenhares no gráfico 3D, sem esquecer se fazer a projeção da interseção, há linhas de código que tens que mudar totalmente
-*/
