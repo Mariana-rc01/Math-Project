@@ -67,7 +67,7 @@ function updateGraph() {
 		var Z_f = contourLevels(x, y, a, b, c, d, e, h);
 		var Z_g = contourLevels(x, y, i, j, k, l, m, n);
 		var intersectionPoints = calculateIntersectionPoints(Z_f, Z_g); // Calcula os pontos de interseção
-		
+
 		// Criação dos dados da linha de interseção
 		var lineData = {
 				type: 'scatter3d', // Usar scatter3d para representar os pontos da interseção como uma linha
