@@ -3,7 +3,6 @@ function f(x, y, a, b, c, d, e, g) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + g;
 }
 
-
 // Função para calcular os valores de z para as curvas de nível
 function contourLevels(x, y, a, b, c, d, e, h) {
 	var Z = [];
@@ -15,6 +14,54 @@ function contourLevels(x, y, a, b, c, d, e, h) {
 		Z.push(row);
 	}
 	return Z;
+}
+
+// Função para criar o plano que corta o gráfico f no valor z do ponto A
+function createIntersectionPlaneAtPointA(pointX, pointY, a, b, c, d, e, h) {
+	var pointZ = f(pointX, pointY, a, b, c, d, e, h);
+
+	var intersectionPlane = {
+		type: 'surface',
+		x: [[-5, 5], [-5, 5]],
+		y: [[-5, -5], [5, 5]],
+		z: [[pointZ, pointZ], [pointZ, pointZ]],
+		colorscale: 'Reds',
+		showscale: false,
+		opacity: 0.3,
+		hoverinfo: 'none',
+	};
+
+	return intersectionPlane;
+}
+
+// Função para criar os pontos no plano z=0 que têm o mesmo valor de z que o ponto A
+function createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h) {
+	var pointZ = f(pointX, pointY, a, b, c, d, e, h);
+	var points = [];
+
+	// Intervalo de valores para x e y
+	var step = 0.0005;
+	for (var x = -5; x <= 5; x += step) {
+		for (var y = -5; y <= 5; y += step) {
+			var z = f(x, y, a, b, c, d, e, h);
+			if (Math.abs(z - pointZ) < 0.001) {
+				points.push([x, y, 0]);
+			}
+		}
+	}
+
+	return {
+		type: 'scatter3d',
+		mode: 'markers',
+		x: points.map(point => point[1]),
+		y: points.map(point => point[0]),
+		z: points.map(point => point[2]),
+		marker: {
+			color: 'pink',
+			size: 2,
+		},
+		showlegend: false,
+	};
 }
 
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
@@ -43,34 +90,31 @@ function updateGraph() {
 			y: [pointX],
 			z: [pointZ],
 			marker: {
-					color: 'red',
-					size: 4,
+				color: 'pink',
+				size: 6,
 			},
+			name:'A',
 		};
 
-		// Criação do plano da curva de nível
-		var contourPlane = {
-			type: 'surface',
-			x: y,
-			y: x,
-			z: Z_f,
-			colorscale: 'Reds',
-			showscale: false,
-			opacity: 0.5, // Ajuste a opacidade conforme necessário
+		// Criação do ponto A no gráfico
+		var pointA1 = {
+			type: 'scatter3d',
+			mode: 'markers',
+			x: [pointY],
+			y: [pointX],
+			z: [0],
+			marker: {
+				color: 'magenta',
+				size: 6,
+			},
+			name:'A\'',
 		};
 
-		// Encontrar o contorno da curva de nível no ponto A
-		var contourLevelsAtPointA = contourLevels([pointX], [pointY], a, b, c, d, e, h);
+		// Criação do plano de interseção no ponto A
+		var intersectionPlaneAtPointA = createIntersectionPlaneAtPointA(pointX, pointY, a, b, c, d, e, h);
 
-		// Extrair o contorno da curva de nível
-		var contourLine = {
-				type: 'scatter3d',
-				mode: 'lines',
-				x: contourLevelsAtPointA[0], // Valores x do contorno da curva
-				y: contourLevelsAtPointA[1], // Valores y do contorno da curva
-				z: contourLevelsAtPointA[0], // Valores z do contorno da curva
-				line: { color: 'blue', width: 2 },
-		};
+		// Criação dos pontos no plano z=0 que têm o mesmo valor de z que o ponto A
+	var pointsOnZPlane = createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h);
 
 		// Intervalo de valores para x e y
 		var x = [],
@@ -84,18 +128,19 @@ function updateGraph() {
 		var Z_f = contourLevels(x, y, a, b, c, d, e, h);
 
 		var data3d = [
-				{
-						type: 'surface',
-						x: y,
-						y: x,
-						z: Z_f,
-						colorscale: 'Viridis',
-						showscale: false,
-						name: 'f(x, y)',
-				},
-				contourPlane, // Adicione o plano da curva de nível
-				pointA, // Adicione o ponto A
-				contourLine, // Adicione a linha curva paralela ao plano z=0
+			{
+				type: 'surface',
+				x: y,
+				y: x,
+				z: Z_f,
+				colorscale: 'Viridis',
+				showscale: false,
+				name: 'f(x, y)',
+			},
+			pointA, // Adiciona o ponto A
+			pointA1, // Projeção do ponto A
+			intersectionPlaneAtPointA, // Adiciona o plano de interseção no ponto A
+			pointsOnZPlane,
 		];
 
 		// Definição das opções de layout dos gráficos
