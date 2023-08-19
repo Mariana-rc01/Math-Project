@@ -211,7 +211,12 @@ function createReferenceAxes() {
 		}
 
 		point.position.set(controls.x, controls.y, controls.z);
-		sphere.scale.set(ro, ro, ro);
+		if (ro <= 1.8) {
+			sphere.scale.set(ro, ro, ro);
+		}
+		else {
+			sphere.scale.set(1.8, 1.8, 1.8);
+		}
 		line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(controls.x, controls.y, controls.z)]);
 
 		const roundedRo = ro.toFixed(2);
