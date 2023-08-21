@@ -160,8 +160,9 @@ function createReferenceAxes() {
 	scene.add(thetaLine);
 
 	const thetaCurveMaterial = new THREE.LineBasicMaterial({ color: "green" });
+	const thetaCurveGeometry = new THREE.BufferGeometry();
 	const thetaCurvePoints = [];
-	const thetaCurve = new THREE.Line(new THREE.BufferGeometry(), thetaCurveMaterial);
+	const thetaCurve = new THREE.Line(thetaCurveGeometry, thetaCurveMaterial);
 	scene.add(thetaCurve);
 
 	// Phi
@@ -210,31 +211,34 @@ function createReferenceAxes() {
 			phi = Math.acos(controls.y / ro); // Troquei Z por Y
 		}
 
-		point.position.set(controls.x, controls.y, controls.z);
-		if (ro <= 1.8) {
-			sphere.scale.set(ro, ro, ro);
-		}
-		else {
-			sphere.scale.set(1.8, 1.8, 1.8);
-		}
-		line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(controls.x, controls.y, controls.z)]);
+		const maxRadius = 1.8;
+		const scaleFactor = Math.min(1, maxRadius / ro); // Escala para limitar o tamanho
+
+		const xScaled = controls.x * scaleFactor;
+		const yScaled = controls.y * scaleFactor;
+		const zScaled = controls.z * scaleFactor;
+
+		point.position.set(xScaled, yScaled, zScaled);
+		sphere.scale.set(ro <= maxRadius ? ro : maxRadius, ro <= maxRadius ? ro : maxRadius, ro <= maxRadius ? ro : maxRadius);
+		line.geometry.setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(xScaled, yScaled, zScaled)]);
 
 		const roundedRo = ro.toFixed(2);
 		const roundedTheta = formatFraction(theta);
 		const roundedPhi = formatFraction(phi);
 
-		// Atualizar geometria das linhas Theta e Phi
+		// Atualizar geometria das linhas Theta
 		thetaLine.geometry.setFromPoints([
 			new THREE.Vector3(0, 0, 0),
-			new THREE.Vector3(controls.x, 0, controls.z),
+			new THREE.Vector3(xScaled, 0, zScaled),
 		]);
 
 		// Atualizar posição da linha curva de theta
 		thetaCurvePoints.length = 0; // Limpar os pontos anteriores
 		thetaCurvePoints.push(new THREE.Vector3(0, 0, 0)); // Adicionar ponto inicial
+		const escala = Math.sqrt(zScaled ** 2 + xScaled ** 2);
 		for (let angle = 0; angle <= theta; angle += 0.01) {
-			const x = Math.cos(angle) * value;
-			const z = Math.sin(angle) * value;
+			const x = Math.cos(angle) * escala;
+			const z = Math.sin(angle) * escala;
 			thetaCurvePoints.push(new THREE.Vector3(z, 0, x));
 		}
 		thetaCurve.geometry.setFromPoints(thetaCurvePoints);
@@ -242,8 +246,8 @@ function createReferenceAxes() {
 		// Curva de phi
 		phiCurvePoints.length = 0; // Limpar os pontos anteriores
 
-		const p0 = new THREE.Vector3(controls.x, controls.y, controls.z); // Ponto P
-		const poleN = new THREE.Vector3(0, ro, 0); // Polo norte
+		const p0 = new THREE.Vector3(xScaled, yScaled, zScaled); // Ponto P
+		const poleN = new THREE.Vector3(0, ro <= maxRadius ? ro : maxRadius, 0); // Polo norte
 
 		const segments = 100; // Número de segmentos para a curva
 
@@ -263,7 +267,7 @@ function createReferenceAxes() {
 			const rotationAngle = Math.acos(sphereNormal.dot(poleNormal));
 
 			const q = new THREE.Quaternion().setFromAxisAngle(rotationAxis, rotationAngle * t);
-			const pointOnSphere = sphereNormal.clone().applyQuaternion(q).multiplyScalar(ro);
+			const pointOnSphere = sphereNormal.clone().applyQuaternion(q).multiplyScalar(ro <= maxRadius ? ro : maxRadius);
 
 			return pointOnSphere;
 		}
