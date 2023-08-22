@@ -3,6 +3,16 @@ function f(x, y, a, b, c, d, e, g) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + g;
 }
 
+// Função para calcular a derivada parcial de f(x,y)
+function fx(x, y, a, _, c, d, _, _) {
+	return 2 * a * x + c * y + d;
+}
+
+// Função para calcular a derivada parcial de f(x,y)
+function fy(x, y, _, b, c, _, e, _) {
+	return 2 * b * y + c * x + e;
+}
+
 // Função para calcular os valores de z para as curvas de nível
 function contourLevels(x, y, a, b, c, d, e, h) {
 	var Z = [];
@@ -64,6 +74,10 @@ function createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h) {
 	};
 }
 
+function degToRad(degrees) {
+	return degrees * (Math.PI / 180);
+}
+
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
 function updateGraph() {
 
@@ -81,6 +95,8 @@ function updateGraph() {
 
 		// Calcular o valor de z para o ponto A
 		var pointZ = f(pointX, pointY, a, b, c, d, e, h);
+
+		var vector = [fx(pointX, pointY, a, b, c, d, e, h), fy(pointX, pointY, a, b, c, d, e, h)];
 
 		// Criação do ponto A no gráfico
 		var pointA = {
@@ -110,11 +126,29 @@ function updateGraph() {
 			name:'A\'',
 		};
 
+		// Criação do vetor para o ponto A1
+		var vectorTrace = {
+			type: 'scatter3d',
+			mode: 'lines+markers',
+			x: [pointY, pointY + vector[1]], // Coordenadas x do ponto A1 e ponto final do vetor
+			y: [pointX, pointX + vector[0]], // Coordenadas y do ponto A1 e ponto final do vetor
+			z: [0, 0], // Coordenadas z do plano z=0 e ponto final do vetor
+			marker: {
+				color: 'green', // Cor dos marcadores do vetor
+				size: 3,
+			},
+			line: {
+				color: 'green', // Cor da linha do vetor
+				width: 2,
+			},
+			name: '∇f(A\')', // Nome da legenda do vetor
+		};
+
 		// Criação do plano de interseção no ponto A
 		var intersectionPlaneAtPointA = createIntersectionPlaneAtPointA(pointX, pointY, a, b, c, d, e, h);
 
 		// Criação dos pontos no plano z=0 que têm o mesmo valor de z que o ponto A
-	var pointsOnZPlane = createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h);
+		var pointsOnZPlane = createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h);
 
 		// Intervalo de valores para x e y
 		var x = [],
@@ -141,6 +175,7 @@ function updateGraph() {
 			pointA1, // Projeção do ponto A
 			intersectionPlaneAtPointA, // Adiciona o plano de interseção no ponto A
 			pointsOnZPlane,
+			vectorTrace,
 		];
 
 		// Definição das opções de layout dos gráficos
