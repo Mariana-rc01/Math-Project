@@ -224,7 +224,10 @@
 												<input type="number" id="point-y" step="0.1" value="3.1" onchange="checkValue(this)">
 											</div>
 										</form>
-
+										<h1>Mover vetor u em torno do ponto A':</h1>
+										<div class="slider">
+											<input type="range" id="angleSlider" min="0" max="360" step="1" value="0" onchange="updateGraph()">
+										</div>
 										<div id="plotly-graph-3d"></div>
 										<script src="static/js/analiseP3.js"></script>
 										<script type="text/javascript">
