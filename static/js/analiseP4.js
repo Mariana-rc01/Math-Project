@@ -3,11 +3,6 @@ function f(x, y, a, b, c, d, e, h) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + h;
 }
 
-// Função para calcular os valores de g(x,y) = 0
-function g(x, y, i, j, k, l, m, n) {
-	return i * x**2 + j * y**2 + k * x * y + l * x + m * y + n;
-}
-
 // Função para calcular a derivada parcial de f(x,y)
 function dx(x, y, a, _, c, d, _, _) {
 	return 2 * a * x + c * y + d;
