@@ -11,13 +11,13 @@
 				margin: 0;
 			}
 			#container {
-				width: 800px;
+				width: 900px;
 				margin: auto;
 				text-align: center;
 			}
 			#graphDiv {
-				width: 800px;
-				height: 650px;
+				width: 900px;
+				height: 750px;
 				margin: auto;
 			}
 			#controls {
@@ -249,15 +249,27 @@
 										</div>
 									</form>
 									<div class="slider">
-										<label for="slider">Número de Paralelepípedos:</label>
-										<input
-											type="range"
-											min="1"
-											max="50"
-											value="10"
-											id="slider"
-											oninput="onSlideChange(this.value)"
-										/>
+										<div class="input-field">
+											<label for="level">Número de Paralelepípedos:</label>
+											<input
+												type="range"
+												id="level"
+												class="slider"
+												min="1"
+												max="50"
+												step="1"
+												value="10"
+												oninput="onSlideChange()">
+											<input
+												type="number"
+												id="level-value"
+												class="slider-value"
+												min="1"
+												max="50"
+												step="1"
+												value="10"
+												oninput="onSlideChange()">
+										</div>
 									</div>
 									<div id="plot"></div>
 									<script src="static/js/analiseP5.js"></script>

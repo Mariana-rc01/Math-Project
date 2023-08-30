@@ -8,18 +8,17 @@ let numParallelepipeds = 10;
 
 // Função para criar os dados para o Plotly
 function createData() {
-	// Obter os valores de a, b, e quantidade de curvas de nível ou valor da curva de nível do formulário
-	var a = parseFloat(document.getElementById('a').value) || 0; // Valor padrão de 0 para 'a'
-	var b = parseFloat(document.getElementById('b').value) || 0; // Valor padrão de 0 para 'b'
-	var c = parseFloat(document.getElementById('c').value) || 0; // Valor padrão de 0 para 'c'
-	var d = parseFloat(document.getElementById('d').value) || 0; // Valor padrão de 0 para 'd'
-	var e = parseFloat(document.getElementById('e').value) || 0; // Valor padrão de 0 para 'e'
-	var g = parseFloat(document.getElementById('g').value) || 0; // Valor padrão de 0 para 'h'
+	var a = parseFloat(document.getElementById('a').value) || 0;
+	var b = parseFloat(document.getElementById('b').value) || 0;
+	var c = parseFloat(document.getElementById('c').value) || 0;
+	var d = parseFloat(document.getElementById('d').value) || 0;
+	var e = parseFloat(document.getElementById('e').value) || 0;
+	var g = parseFloat(document.getElementById('g').value) || 0;
 
-	var xi = parseFloat(document.getElementById('xi').value) || 0; // Valor padrão de 0 para 'xi'
-	var xf = parseFloat(document.getElementById('xf').value) || 0; // Valor padrão de 0 para 'xf'
-	var yi = parseFloat(document.getElementById('yi').value) || 0; // Valor padrão de 0 para 'yi'
-	var yf = parseFloat(document.getElementById('yf').value) || 0; // Valor padrão de 0 para 'yf'
+	var xi = parseFloat(document.getElementById('xi').value) || 0;
+	var xf = parseFloat(document.getElementById('xf').value) || 0;
+	var yi = parseFloat(document.getElementById('yi').value) || 0;
+	var yf = parseFloat(document.getElementById('yf').value) || 0;
 
 	const stepX = (xf - xi) / numParallelepipeds;
 	const stepY = (yf - yi) / numParallelepipeds;
@@ -39,13 +38,13 @@ function createData() {
 				type: 'mesh3d',
 				x: [x0, x1, x1, x0, x0],
 				y: [y0, y0, y1, y1, y0],
-				z: [0, 0, z, z, 0],	// Ajuste para representar alturas positivas ou negativas
+				z: [0, 0, z, z, 0],
 				opacity: 0.5,
 				color: 'blue',
 			});
 		}
 	}
-	return data
+	return data;
 }
 
 function updateGraph() {
@@ -54,17 +53,27 @@ function updateGraph() {
 	const data = createData();
 
 	const layout = {
+		margin: {
+			l: 50,
+			r: 50,
+			b: 50,
+			t: 50,
+		},
 		scene: {
 			aspectmode: 'manual',
 			aspectratio: { x: 1, y: 1, z: 1 },
+			camera: {
+				eye: { x: 1.2, y: 1.1, z: 0 },
+			},
 		},
 	};
 
 	Plotly.newPlot(plotDiv, data, layout);
 }
 
-function onSlideChange(sliderValue) {
-	numParallelepipeds = sliderValue;
+function onSlideChange() {
+	numParallelepipeds = document.getElementById('level').value;
+	document.getElementById('level-value').value = numParallelepipeds;
 	updateGraph();
 }
 
