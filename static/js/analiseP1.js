@@ -108,7 +108,8 @@ function updateGraph() {
 		} else {
 				// For the many curves option, generate c_values based on the number of curves
 				for (var k = 0; k < curves; k++) {
-						c_values.push(minZ + (k / (curves - 1)) * (maxZ - minZ));
+					var level = minZ + (k / curves) * (maxZ - minZ);
+					c_values.push(level);
 				}
 		}
 
@@ -209,18 +210,23 @@ function updateGraph() {
 
 // Atualizar valor da quantidade de curvas de nível ou valor da curva de nível ao mover as barras de deslizar
 function updateSliderValue() {
-		var curvesOption = document.querySelector('input[name="curves-option"]:checked');
-		var isSingleCurveOption = curvesOption.value === 'single';
+	var curvesOption = document.querySelector('input[name="curves-option"]:checked');
+	var isSingleCurveOption = curvesOption.value === 'single';
 
-		if (isSingleCurveOption) {
-				var levelValue = document.getElementById('level').value;
-				document.getElementById('level-value').value = levelValue;
-		} else {
-				var curvesValue = document.getElementById('curves').value;
-				document.getElementById('curves-value').value = curvesValue;
-		}
-		updateGraph();
+	var levelValueInput = document.getElementById('level-value');
+	var curvesValueInput = document.getElementById('curves-value');
+
+	if (isSingleCurveOption) {
+			var levelValue = parseFloat(levelValueInput.value);
+			document.getElementById('level').value = levelValue;
+	} else {
+			var curvesValue = parseInt(curvesValueInput.value);
+			document.getElementById('curves').value = curvesValue;
+	}
+
+	updateGraph();
 }
+
 
 function selectOption(optionId) {
 	document.getElementById(optionId).checked = true;
