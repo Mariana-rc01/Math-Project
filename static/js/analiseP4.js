@@ -26,20 +26,6 @@ function contourLevels(x, y, a, b, c, d, e, h) {
 	return Z;
 }
 
-// Calcula os pontos de interseção entre a superfície g(x, y) e o plano z = 0
-function calculateIntersectionPoints(Z_g) {
-	var intersectionPoints = [];
-
-	for (var i = 0; i < Z_g.length; i++) {
-			for (var j = 0; j < Z_g[i].length; j++) {
-					if (Z_g[i][j] === 0) {
-							intersectionPoints.push({ x: y[j], y: x[i], z: 0 });
-					}
-			}
-	}
-	return intersectionPoints;
-}
-
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
 function updateGraph() {
 
@@ -79,7 +65,6 @@ function updateGraph() {
 		// Criação dos dados do gráfico 3D
 		var Z_f = contourLevels(x, y, a, b, c, d, e, h);
 		var Z_g = contourLevels(x, y, i, j, k, l, m, n); // Calcula os valores de g(x, y)
-		var intersectionPoints = calculateIntersectionPoints(Z_g); // Calcula os pontos de interseção
 
 		// Criação do ponto A no gráfico
 		var pointfP = {
@@ -147,18 +132,6 @@ function updateGraph() {
 
 		var data3d = [
 			{
-					type: 'scatter3d',
-					mode: 'markers',
-					x: intersectionPoints.map(point => point.x),
-					y: intersectionPoints.map(point => point.y),
-					z: intersectionPoints.map(point => point.z),
-					marker: {
-							size: 4,
-							color: 'red',
-					},
-					name: 'Interseção',
-			},
-			{
 					type: 'surface',
 					x: y,
 					y: x,
@@ -186,11 +159,11 @@ function updateGraph() {
 								eye: { x: 1.2, y: 1.2, z: 0.2 },
 						},
 						aspectmode: 'manual',
-						aspectratio: {x:1, y:1, z:1}, // Ajuste conforme necessário
+						aspectratio: {x:1, y:1, z:1},
 						domain: {
 								x: [0, 1],
 								y: [0, 1],
-								z: [0, 0.5] // Ajuste para a posição vertical
+								z: [0, 0.5]
 						}
 				},
 		};
