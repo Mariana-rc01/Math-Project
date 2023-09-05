@@ -26,6 +26,35 @@ function contourLevels(x, y, a, b, c, d, e, h) {
 	return Z;
 }
 
+// Função para encontrar a interseção dos pontos com z = 0
+function createPointsOnZPlane(a, b, c, d, e, h) {
+	var points = [];
+
+	// Intervalo de valores para x e y
+	var step = 0.0005;
+	for (var x = -5; x <= 5; x += step) {
+		for (var y = -5; y <= 5; y += step) {
+			var z = f(x, y, a, b, c, d, e, h);
+			if (Math.abs(z) < 0.001) {
+				points.push([x, y, 0]);
+			}
+		}
+	}
+
+	return {
+		type: 'scatter3d',
+		mode: 'markers',
+		x: points.map(point => point[1]),
+		y: points.map(point => point[0]),
+		z: points.map(point => point[2]),
+		marker: {
+			color: 'pink',
+			size: 2,
+		},
+		showlegend: false,
+	};
+}
+
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
 function updateGraph() {
 
@@ -64,7 +93,6 @@ function updateGraph() {
 
 		// Criação dos dados do gráfico 3D
 		var Z_f = contourLevels(x, y, a, b, c, d, e, h);
-		var Z_g = contourLevels(x, y, i, j, k, l, m, n); // Calcula os valores de g(x, y)
 
 		// Criação do ponto A no gráfico
 		var pointfP = {
@@ -130,6 +158,9 @@ function updateGraph() {
 			name: '∇g(P)', // Nome da legenda do vetor
 		};
 
+		// Criação dos pontos no plano z=0 que têm o mesmo valor de z que o ponto A
+		var pointsOnZPlane = createPointsOnZPlane(i, j, k, l, m, n);
+
 		var data3d = [
 			{
 					type: 'surface',
@@ -145,6 +176,7 @@ function updateGraph() {
 			pointfP,
 			vectorTracef,
 			vectorTraceg,
+			pointsOnZPlane,
 		];
 
 		// Definição das opções de layout dos gráficos
