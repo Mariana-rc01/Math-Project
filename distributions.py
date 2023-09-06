@@ -8,7 +8,7 @@ from scipy.stats import norm
 from scipy.stats import expon
 from scipy.stats import t
 
-opcao = st.sidebar.selectbox("Distribuição", ("Normal", "Exponential",
+opcao = st.sidebar.selectbox("Distributions", ("Normal", "Exponential",
                                               "Chi-squared", "T student", "Binomial", "Poisson"))
 
 np.random.seed(999)
