@@ -135,8 +135,7 @@ function updateGraph() {
 function addNewTraces(newTraces) {
 	// Combine os traços existentes com os novos traços
 	data3d = data3d.concat(newTraces);
-
-	// Recrie o gráfico com todos os traços
+	// Coloque o código que está causando o erro aqui
 	Plotly.newPlot('plotly-graph-3d', data3d, layout3d);
 }
 
@@ -167,103 +166,109 @@ plotlyGraph.on('plotly_click', function(data) {
 			}
 
 			if (!pointAlreadyExists) {
-				// Adicione os novos elementos ao array de dados
-				var a = parseFloat(document.getElementById('a').value) || 0;
-				var b = parseFloat(document.getElementById('b').value) || 0;
-				var c = parseFloat(document.getElementById('c').value) || 0;
-				var d = parseFloat(document.getElementById('d').value) || 0;
-				var e = parseFloat(document.getElementById('e').value) || 0;
-				var h = parseFloat(document.getElementById('h').value) || 0;
-
-				var i = parseFloat(document.getElementById('i').value) || 0;
-				var j = parseFloat(document.getElementById('j').value) || 0;
-				var k = parseFloat(document.getElementById('k').value) || 0;
-				var l = parseFloat(document.getElementById('l').value) || 0;
-				var m = parseFloat(document.getElementById('m').value) || 0;
-				var n = parseFloat(document.getElementById('n').value) || 0;
-
-
-				var pointX = clickedX;
-				var pointY = clickedY;
-
-				var pointZ = f(pointX, pointY, a, b, c, d, e, h);
-
-				console.log('Coordenadas do ponto clicado - X: ' + pointX + ', Y: ' + pointY + pointZ);
-
-
-				// Crie os novos elementos do gráfico
-				var pointP = {
-					type: 'scatter3d',
-					mode: 'markers',
-					x: [pointY],
-					y: [pointX],
-					z: [0],
-					marker: {
-						color: 'magenta',
-						size: 6,
-					},
-					name: 'P',
-				};
-
-				var pointfP = {
-					type: 'scatter3d',
-					mode: 'markers',
-					x: [pointY],
-					y: [pointX],
-					z: [pointZ],
-					marker: {
-						color: 'pink',
-						size: 6,
-					},
-					name: 'f(P)',
-				};
-
-				var vectorf = [dx(pointX, pointY, a, b, c, d, e, h), dy(pointX, pointY, a, b, c, d, e, h)];
-				var vectorg = [dx(pointX, pointY, i, j, k, l, m, n), dy(pointX, pointY, i, j, k, l, m, n)];
-
-				var vectorTracef = {
-					type: 'scatter3d',
-					mode: 'lines+markers',
-					x: [pointY, pointY + vectorf[1]],
-					y: [pointX, pointX + vectorf[0]],
-					z: [0, 0],
-					marker: {
-						color: 'green',
-						size: 3,
-					},
-					line: {
-						color: 'green',
-						width: 2,
-					},
-					name: '∇f(P)',
-				};
-
-				var vectorTraceg = {
-					type: 'scatter3d',
-					mode: 'lines+markers',
-					x: [pointY, pointY + vectorg[1]],
-					y: [pointX, pointX + vectorg[0]],
-					z: [0, 0],
-					marker: {
-						color: 'orange',
-						size: 3,
-					},
-					line: {
-						color: 'orange',
-						width: 2,
-					},
-					name: '∇g(P)',
-				};
-
-				// Crie os novos elementos do gráfico
-				var newTraces = [pointP, pointfP, vectorTracef, vectorTraceg];
-
-				// Adicione os novos traços ao gráfico
-				addNewTraces(newTraces);
+				clearTraces();
+			// Adicione os novos elementos ao gráfico
+			addPointAndVectors(clickedX, clickedY);
 			}
 		}
 	}
 });
+
+// Função para limpar os traços existentes
+function clearTraces() {
+	data3d = data3d.filter(trace => trace.name !== 'P' && trace.name !== 'f(P)' && trace.name !== '∇f(P)' && trace.name !== '∇g(P)');
+	Plotly.newPlot('plotly-graph-3d', data3d, layout3d);
+}
+
+function addPointAndVectors(pointX, pointY) {
+	// Obtenha os valores de a, b, c, d, e, h, i, j, k, l, m e n
+	var a = parseFloat(document.getElementById('a').value) || 0;
+	var b = parseFloat(document.getElementById('b').value) || 0;
+	var c = parseFloat(document.getElementById('c').value) || 0;
+	var d = parseFloat(document.getElementById('d').value) || 0;
+	var e = parseFloat(document.getElementById('e').value) || 0;
+	var h = parseFloat(document.getElementById('h').value) || 0;
+
+	var i = parseFloat(document.getElementById('i').value) || 0;
+	var j = parseFloat(document.getElementById('j').value) || 0;
+	var k = parseFloat(document.getElementById('k').value) || 0;
+	var l = parseFloat(document.getElementById('l').value) || 0;
+	var m = parseFloat(document.getElementById('m').value) || 0;
+	var n = parseFloat(document.getElementById('n').value) || 0;
+
+	var pointZ = f(pointX, pointY, a, b, c, d, e, h);
+
+	console.log('Coordenadas do ponto clicado - X: ' + pointX + ', Y: ' + pointY + pointZ);
+
+	// Crie os novos elementos do gráfico
+	var pointP = {
+		type: 'scatter3d',
+		mode: 'markers',
+		x: [pointY],
+		y: [pointX],
+		z: [0],
+		marker: {
+			color: 'magenta',
+			size: 6,
+		},
+		name: 'P',
+	};
+
+	var pointfP = {
+		type: 'scatter3d',
+		mode: 'markers',
+		x: [pointY],
+		y: [pointX],
+		z: [pointZ],
+		marker: {
+			color: 'pink',
+			size: 6,
+		},
+		name: 'f(P)',
+	};
+
+	var vectorf = [dx(pointX, pointY, a, b, c, d, e, h), dy(pointX, pointY, a, b, c, d, e, h)];
+	var vectorg = [dx(pointX, pointY, i, j, k, l, m, n), dy(pointX, pointY, i, j, k, l, m, n)];
+
+	var vectorTracef = {
+		type: 'scatter3d',
+		mode: 'lines+markers',
+		x: [pointY, pointY + vectorf[1]],
+		y: [pointX, pointX + vectorf[0]],
+		z: [0, 0],
+		marker: {
+			color: 'green',
+			size: 3,
+		},
+		line: {
+			color: 'green',
+			width: 2,
+		},
+		name: '∇f(P)',
+	};
+
+	var vectorTraceg = {
+		type: 'scatter3d',
+		mode: 'lines+markers',
+		x: [pointY, pointY + vectorg[1]],
+		y: [pointX, pointX + vectorg[0]],
+		z: [0, 0],
+		marker: {
+			color: 'orange',
+			size: 3,
+		},
+		line: {
+			color: 'orange',
+			width: 2,
+		},
+		name: '∇g(P)',
+	};
+
+	// Crie os novos elementos do gráfico
+	var newTraces = [pointP, pointfP, vectorTracef, vectorTraceg];
+
+	addNewTraces(newTraces);
+}
 
 function checkValue(input) {
 	if (input.value === '') {
@@ -271,6 +276,23 @@ function checkValue(input) {
 		}
 	updateGraph();
 }
+
+// Ouvinte de evento para o botão de redefinição
+document.getElementById('resetButton').addEventListener('click', function() {
+	// Carrega novamente o arquivo JavaScript
+	var scriptElement = document.createElement('script');
+	scriptElement.src = 'static/js/analiseP4.js';
+
+	// Remove o script anterior (opcional)
+	var oldScript = document.querySelector('script[src="static/js/analiseP4.js"]');
+	if (oldScript) {
+			oldScript.remove();
+	}
+
+	// Adiciona o novo script ao corpo da página
+	document.body.appendChild(scriptElement);
+});
+
 
 // Atualizar os gráficos inicialmente
 updateGraph();
