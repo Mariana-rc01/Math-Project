@@ -74,8 +74,8 @@ function updateGraph() {
 		var isSingleCurveOption = singleCurveOption.checked;
 
 		// Obter os valores de a, b, e quantidade de curvas de nível ou valor da curva de nível do formulário
-		var a = parseFloat(document.getElementById('a').value) || 1; // Valor padrão de 1 para 'a'
-		var b = parseFloat(document.getElementById('b').value) || 1; // Valor padrão de 1 para 'b'
+		var a = parseFloat(document.getElementById('a').value) || 0; // Valor padrão de 1 para 'a'
+		var b = parseFloat(document.getElementById('b').value) || 0; // Valor padrão de 1 para 'b'
 		var c = parseFloat(document.getElementById('c').value) || 0; // Valor padrão de 0 para 'c'
 		var d = parseFloat(document.getElementById('d').value) || 0; // Valor padrão de 0 para 'd'
 		var e = parseFloat(document.getElementById('e').value) || 0; // Valor padrão de 0 para 'e'
@@ -105,45 +105,12 @@ function updateGraph() {
 				// For the single curve option, use the level value to update the contour plane
 				c_values.push(level);
 
-				// Create the single cut for the 2D contour graph
-				var singleCut = createSingleCut(x, y, a, b, c, d, e, f, level);
-
-				// Criação dos dados dos gráficos
-				var dataContour = [
-						{
-								type: 'contour',
-								x: y,
-								y: x,
-								z: contourLevels(x, y, a, b, c, d, e, f),
-								colorscale: 'Viridis',
-								zmin: minZ,
-								zmax: maxZ,
-								showscale: false, // Disable colorscale
-						},
-						singleCut,
-				];
 		} else {
 				// For the many curves option, generate c_values based on the number of curves
 				for (var k = 0; k < curves; k++) {
-						c_values.push(minZ + (k / (curves - 1)) * (maxZ - minZ));
+					var level = minZ + (k / curves) * (maxZ - minZ);
+					c_values.push(level);
 				}
-
-				// Criação dos cortes horizontais no gráfico 2D
-				var cuts = createCuts(x, y, a, b, c_values, c, d, e, f);
-
-				// Criação dos dados dos gráficos
-				var dataContour = [
-						{
-								type: 'contour',
-								x: y,
-								y: x,
-								z: contourLevels(x, y, a, b, c, d, e, f),
-								colorscale: 'Viridis',
-								zmin: minZ,
-								zmax: maxZ,
-								showscale: false, // Disable colorscale
-						},
-				].concat(cuts);
 		}
 
 		// Criação dos planos de curvas de nível
@@ -178,6 +145,48 @@ function updateGraph() {
 				},
 		};
 
+		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
+		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
+		var dataContour = [
+			{
+					type: 'contour',
+					x: y, // Use os mesmos valores de y do gráfico 3D
+					y: x, // Use os mesmos valores de x do gráfico 3D
+					z: Z, // Use os mesmos valores de Z do gráfico 3D
+					colorscale: 'Viridis', // Use a colorscale Viridis para o degradê de cores
+					showscale: false,
+					hoverinfo: 'none',
+					contours: {
+						showlines: false, // Não mostrar as linhas entre as cores
+				},
+			},
+		];
+
+		// Adicione linhas de contorno individuais para cada nível
+		for (var level of c_values) {
+			var contourLines = {
+					type: 'contour',
+					x: y, // Use os mesmos valores de y do gráfico 3D
+					y: x, // Use os mesmos valores de x do gráfico 3D
+					z: contourLevels(x, y, a, b, c, d, e, f), // Use a função de cálculo para obter Z
+					colorscale: 'Viridis',
+					showscale: false,
+					hoverinfo: 'none',
+					contours: {
+							start: level,
+							end: level,
+							size: 0,
+							coloring: 'lines',
+					},
+					line: {
+							color: 'black',
+							width: 2,
+					},
+			};
+
+			dataContour.push(contourLines);
+		}
+
 		var layoutContour = {
 				title: 'Gráfico de Curvas de Nível',
 				xaxis_title: 'Y',
@@ -201,18 +210,23 @@ function updateGraph() {
 
 // Atualizar valor da quantidade de curvas de nível ou valor da curva de nível ao mover as barras de deslizar
 function updateSliderValue() {
-		var curvesOption = document.querySelector('input[name="curves-option"]:checked');
-		var isSingleCurveOption = curvesOption.value === 'single';
+	var curvesOption = document.querySelector('input[name="curves-option"]:checked');
+	var isSingleCurveOption = curvesOption.value === 'single';
 
-		if (isSingleCurveOption) {
-				var levelValue = document.getElementById('level').value;
-				document.getElementById('level-value').value = levelValue;
-		} else {
-				var curvesValue = document.getElementById('curves').value;
-				document.getElementById('curves-value').value = curvesValue;
-		}
-		updateGraph();
+	var levelValueInput = document.getElementById('level-value');
+	var curvesValueInput = document.getElementById('curves-value');
+
+	if (isSingleCurveOption) {
+			var levelValue = parseFloat(levelValueInput.value);
+			document.getElementById('level').value = levelValue;
+	} else {
+			var curvesValue = parseInt(curvesValueInput.value);
+			document.getElementById('curves').value = curvesValue;
+	}
+
+	updateGraph();
 }
+
 
 function selectOption(optionId) {
 	document.getElementById(optionId).checked = true;
@@ -246,13 +260,8 @@ function toggleCurveOptions() {
 
 function checkValue(input) {
 	if (input.value === '') {
-		// If the input value is empty, set it to 1 for 'a' and 'b', and 0 for the rest
-		if (input.id === 'a' || input.id === 'b') {
-			input.value = 1;
-		} else {
 			input.value = 0;
 		}
-	}
 	updateGraph();
 }
 

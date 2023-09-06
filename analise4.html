@@ -4,6 +4,104 @@
 		<title>Math project</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="static/css/main.css"/>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<style>
+			body {
+				background-color: white;
+				margin: 0;
+			}
+			#container {
+				width: 800px;
+				margin: auto;
+				text-align: center;
+			}
+			#graphDiv {
+				width: 800px;
+				height: 650px;
+				margin: auto;
+			}
+			#controls {
+				margin-top: 20px;
+			}
+			.coordinates {
+				margin-top: 10px;
+			}
+			.input-field {
+				display: flex;
+				align-items: center;
+				margin-bottom: 5px;
+			}
+			.input-label {
+				margin-right: 10px;
+			}
+			.input-value {
+				width: 60px;
+				padding: 2px;
+			}
+
+			/* Style for the sliders */
+			.slider {
+				background-color: rgb(169, 206, 238); /* Set the background color of the blue box */
+				padding: 10px;
+				border-radius: 5px;
+				margin-bottom: 10px;
+			}
+
+			/* Style for the slider input itself */
+			.slider input[type="range"] {
+				appearance: none; /* Hide the default slider styling */
+				width: 100%; /* Set the width of the slider input to 100% */
+				height: 5px; /* Set the height of the slider bar */
+				background: white; /* Set the background color of the slider bar to white */
+				outline: none; /* Remove the default outline on focus */
+				border-radius: 5px; /* Round the corners of the slider bar */
+			}
+
+			/* Style for the slider thumb (handle) */
+			.slider input[type="range"]::-webkit-slider-thumb {
+				appearance: none; /* Hide the default slider thumb */
+				width: 15px; /* Set the width of the slider thumb */
+				height: 15px; /* Set the height of the slider thumb */
+				background: rgb(74, 150, 215); /* Set the background color of the slider thumb (you can change this color) */
+				border-radius: 50%; /* Make the slider thumb round */
+				cursor: pointer; /* Change the cursor to a pointer on hover */
+			}
+
+			.slider input[type="range"]::-moz-range-thumb {
+				appearance: none;
+				width: 15px;
+				height: 15px;
+				background: rgb(74, 150, 215);
+				border-radius: 50%;
+				cursor: pointer;
+			}
+
+			#plotly-graph-3d {
+					width: 70%;
+					float: left;
+			}
+			#plotly-graph-contour {
+					width: 30%;
+					float: right;
+			}
+
+			.modebar-container {
+			display: none !important;
+		}
+			.input-container {
+				display: flex;
+				align-items: center;
+				margin-bottom: 10px;
+			}
+
+			.input-container label,
+			.input-container input {
+				margin-right: 10px;
+			}
+			.input-container input:last-child {
+				margin-right: 0;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="page-wrapper">
@@ -51,7 +149,7 @@
 										</li>
 									</ul>
 								</li>
-								<li><a href="algebra.html">Linear Algebra</a></li>
+								<li><a href="about.html">About</a></li>
 							</ul>
 						</nav>
 				</div>
@@ -93,6 +191,57 @@
 
 									</article>
 
+									<h2>Gráfico 3D Interativo</h2>
+										<h1>f(x,y) = ax² + by² + cxy + dx + ey + h</h1>
+										<!-- Formulário para entrada de valores de a, b, c, d, e, h -->
+										<form oninput="updateGraph()">
+											<div class="input-container">
+												<label for="a">Valor de a:</label>
+												<input type="number" id="a" step="0.1" value="1" onchange="checkValue(this)">
+												<label for="b">Valor de b:</label>
+												<input type="number" id="b" step="0.1" value="1" onchange="checkValue(this)">
+											</div>
+											<div class="input-container">
+												<label for="c">Valor de c:</label>
+												<input type="number" id="c" step="0.1" value="0" onchange="checkValue(this)">
+												<label for="d">Valor de d:</label>
+												<input type="number" id="d" step="0.1" value="0" onchange="checkValue(this)">
+											</div>
+											<div class="input-container">
+												<label for="e">Valor de e:</label>
+												<input type="number" id="e" step="0.1" value="0" onchange="checkValue(this)">
+												<label for="h">Valor de h:</label>
+												<input type="number" id="h" step="0.1" value="5" onchange="checkValue(this)">
+											</div>
+										</form>
+										<h1>g(x,y) = ix² + jy² + kxy + lx + my + n</h1>
+										<form oninput="updateGraph()">
+											<div class="input-container">
+												<label for="i">Valor de i:</label>
+												<input type="number" id="i" step="0.1" value="2" onchange="checkValue(this)">
+												<label for="j">Valor de j:</label>
+												<input type="number" id="j" step="0.1" value="1" onchange="checkValue(this)">
+											</div>
+											<div class="input-container">
+												<label for="k">Valor de k:</label>
+												<input type="number" id="k" step="0.1" value="0" onchange="checkValue(this)">
+												<label for="l">Valor de l:</label>
+												<input type="number" id="l" step="0.1" value="0" onchange="checkValue(this)">
+											</div>
+											<div class="input-container">
+												<label for="m">Valor de m:</label>
+												<input type="number" id="m" step="0.1" value="0" onchange="checkValue(this)">
+												<label for="n">Valor de n:</label>
+												<input type="number" id="n" step="0.1" value="-10" onchange="checkValue(this)">
+											</div>
+										</form>
+										<button id="resetButton">Selecionar Novo Ponto</button>
+
+										<div id="plotly-graph-3d"></div>
+										<script src="static/js/analiseP4.js"></script>
+										<script type="text/javascript">
+												updateGraph();
+										</script>
 								</div>
 							</div>
 						</div>
