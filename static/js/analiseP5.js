@@ -96,6 +96,7 @@ function updateGraph() {
 	const data = createData();
 
 	const layout = {
+		title: 'Interactive 3D Chart',
 		margin: {
 			l: 50,
 			r: 50,

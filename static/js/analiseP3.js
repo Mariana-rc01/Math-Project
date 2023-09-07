@@ -74,10 +74,6 @@ function createPointsOnZPlane(pointX, pointY, a, b, c, d, e, h) {
 	};
 }
 
-function degToRad(degrees) {
-	return degrees * (Math.PI / 180);
-}
-
 // Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
 function updateGraph() {
 
@@ -97,41 +93,6 @@ function updateGraph() {
 		var pointZ = f(pointX, pointY, a, b, c, d, e, h);
 
 		var vector = [fx(pointX, pointY, a, b, c, d, e, h), fy(pointX, pointY, a, b, c, d, e, h)];
-
-		// Obter o valor atual da barra deslizante
-		var sliderValue = parseFloat(document.getElementById('angleSlider').value);
-
-		// Calcular as componentes do vetor u com base no ângulo da barra deslizante
-		var angle = degToRad(sliderValue);
-		var u_x = Math.cos(angle);
-		var u_y = Math.sin(angle);
-
-		// Normalizar o vetor u para o comprimento 1
-		var u_length = 1;
-		var normalized_u_x = u_x * u_length;
-		var normalized_u_y = u_y * u_length;
-
-		// Coordenadas do ponto A'
-		var pointA1_X = pointX + normalized_u_x;
-		var pointA1_Y = pointY + normalized_u_y;
-
-		// Criação do vetor u no ponto A'
-		var vectorU = {
-				type: 'scatter3d',
-				mode: 'lines',
-				x: [pointY, pointA1_Y], // Coordenadas x do ponto A' e ponto final do vetor u
-				y: [pointX, pointA1_X], // Coordenadas y do ponto A' e ponto final do vetor u
-				z: [0, 0], // Coordenadas z do plano z=0 e ponto final do vetor u
-				marker: {
-						color: 'blue', // Cor do vetor u
-						size: 5,
-				},
-				line: {
-						color: 'blue', // Cor da linha do vetor u
-						width: 2,
-				},
-				name: 'u', // Nome da legenda do vetor u
-		};
 
 		// Criação do ponto A no gráfico
 		var pointA = {
@@ -211,12 +172,11 @@ function updateGraph() {
 			intersectionPlaneAtPointA, // Adiciona o plano de interseção no ponto A
 			pointsOnZPlane,
 			vectorTrace,
-			vectorU,
 		];
 
 		// Definição das opções de layout dos gráficos
 		var layout3d = {
-				title: 'Gráfico 3D Interativo',
+				title: 'Interactive 3D Chart',
 				xaxis_title: 'Y',
 				yaxis_title: 'X',
 				zaxis_title: 'Z',

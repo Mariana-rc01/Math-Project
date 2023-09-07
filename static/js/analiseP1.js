@@ -133,7 +133,7 @@ function updateGraph() {
 
 		// Definição das opções de layout dos gráficos
 		var layout3d = {
-				title: 'Gráfico 3D Interativo',
+				title: 'Interactive 3D Chart',
 				xaxis_title: 'Y',
 				yaxis_title: 'X',
 				zaxis_title: 'Z',
@@ -188,7 +188,7 @@ function updateGraph() {
 		}
 
 		var layoutContour = {
-				title: 'Gráfico de Curvas de Nível',
+				title: 'Contour Graph',
 				xaxis_title: 'Y',
 				yaxis_title: 'X',
 				margin: { l: 0, r: 0, b: 0, t: 40 },

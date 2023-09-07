@@ -108,7 +108,7 @@ function updateGraph() {
 
 	// Definição das opções de layout dos gráficos
 	layout3d = {
-		title: 'Gráfico 3D Interativo',
+		title: 'Interactive 3D Chart',
 		xaxis_title: 'Y',
 		yaxis_title: 'X',
 		zaxis_title: 'Z',
