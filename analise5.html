@@ -138,36 +138,16 @@
 									<a href="analise.html">Analysis</a>
 									<ul>
 										<li><a href="analise1.html">Contour Line</a></li>
-										<li><a href="analise2.html">Derivative vs Tangent Space</a></li>
 										<li><a href="analise3.html">Gradient</a></li>
 										<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
-										<li class="current"><a href="analise5.html">Darboux sums</a></li>
+										<li class="current"><a href="analise5.html">Riemann sums</a></li>
 										<li><a href="analise6.html">Spherical Coordinates</a></li>
 									</ul>
 								</li>
 								<li>
 									<a href="probabilidades.html">Probabilities</a>
-									<ul>
-										<li>
-											<a href="probabilidades1.html">Problema 1</a>
-											<ul>
-												<li><a href="probabilidades1-1.html">Binomial</a></li>
-												<li><a href="probabilidades1-2.html">Poisson</a></li>
-												<li><a href="probabilidades1-3.html">etc.</a></li>
-											</ul>
-										</li>
-										<li><a href="probabilidades2.html">Problema 2</a></li>
-										<li>
-											<a href="probabilidades3.html">Problema 3</a>
-											<ul>
-												<li><a href="probabilidades3-1.html">Binomial</a></li>
-												<li><a href="probabilidades3-2.html">Poisson</a></li>
-												<li><a href="probabilidades3-3.html">etc.</a></li>
-											</ul>
-										</li>
-									</ul>
 								</li>
-								<li><a href="about.html">About</a></li>
+								<li><a href="about.html">Information</a></li>
 							</ul>
 						</nav>
 				</div>
@@ -184,10 +164,9 @@
 											<h3>Problems</h3>
 											<ul class="links">
 												<li><a href="analise1.html">Contour Line</a></li>
-												<li><a href="analise2.html">Derivative vs Tangent Space</a></li>
 												<li><a href="analise3.html">Gradient</a></li>
 												<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
-												<li><a href="analise5.html">Darboux sums</a></li>
+												<li><a href="analise5.html">Riemann sums</a></li>
 												<li><a href="analise6.html">Spherical Coordinates</a></li>
 											</ul>
 										</section>
@@ -201,34 +180,34 @@
 
 									<article>
 										<header>
-											<h2>Darboux sums</h2>
-											<p>Enunciado do problema.</p>
+											<h2>Riemann sums</h2>
+											<p>Problem statement.</p>
 										</header>
 
-										<p>Breve explicação.</p>
+										<p>Brief explanation.</p>
 
 									</article>
 
-									<h2>Gráfico 3D Interativo</h2>
+									<h2>Interactive 3D Chart</h2>
 									<h1>f(x,y) = ax² + by² + cxy + dx + ey + g</h1>
 									<!-- Formulário para entrada de valores de a, b, c, d, e, h -->
 									<form oninput="updateGraph()">
 										<div class="input-container">
-											<label for="a">Valor de a:</label>
+											<label for="a">Value of a:</label>
 											<input type="number" id="a" step="0.1" value="-1" onchange="checkValue(this)">
-											<label for="b">Valor de b:</label>
+											<label for="b">Value of b:</label>
 											<input type="number" id="b" step="0.1" value="-1" onchange="checkValue(this)">
 										</div>
 										<div class="input-container">
-											<label for="c">Valor de c:</label>
+											<label for="c">Value of c:</label>
 											<input type="number" id="c" step="0.1" value="0" onchange="checkValue(this)">
-											<label for="d">Valor de d:</label>
+											<label for="d">Value of d:</label>
 											<input type="number" id="d" step="0.1" value="0" onchange="checkValue(this)">
 										</div>
 										<div class="input-container">
-											<label for="e">Valor de e:</label>
+											<label for="e">Value of e:</label>
 											<input type="number" id="e" step="0.1" value="0" onchange="checkValue(this)">
-											<label for="g">Valor de g:</label>
+											<label for="g">Value of g:</label>
 											<input type="number" id="g" step="0.1" value="6" onchange="checkValue(this)">
 										</div>
 									</form>
@@ -236,21 +215,21 @@
 									<!-- Formulário para entrada de valores de a, b, c, d, e, h -->
 									<form oninput="updateGraph()">
 										<div class="input-container">
-											<label for="xi">Valor de xi:</label>
+											<label for="xi">Value of xi:</label>
 											<input type="number" id="xi" step="0.1" value="-2" onchange="checkValue(this)">
-											<label for="xf">Valor de xf:</label>
+											<label for="xf">Value of xf:</label>
 											<input type="number" id="xf" step="0.1" value="2" onchange="checkValue(this)">
 										</div>
 										<div class="input-container">
-											<label for="yi">Valor de yi:</label>
+											<label for="yi">Value of yi:</label>
 											<input type="number" id="yi" step="0.1" value="-2" onchange="checkValue(this)">
-											<label for="yf">Valor de yf:</label>
+											<label for="yf">Value of yf:</label>
 											<input type="number" id="yf" step="0.1" value="2" onchange="checkValue(this)">
 										</div>
 									</form>
 									<div class="slider">
 										<div class="input-field">
-											<label for="level">Número de Paralelepípedos:</label>
+											<label for="level">Number of parallelepipeds:</label>
 											<input
 												type="range"
 												id="level"
@@ -273,7 +252,7 @@
 										</div>
 									</div>
 									<div>
-										A soma é: <span id="soma-value">0</span>
+										The Riemann sum is: <span id="soma-value">0</span>
 									</div>
 									<div id="plot"></div>
 									<script src="static/js/analiseP5.js"></script>
@@ -293,51 +272,51 @@
 						<section class="col-5 col-8-narrower col-15-mobilep">
 							<h3>Links</h3>
 							<ul class="links">
-								<li><a href="https://www.uminho.pt/PT">UMinho</a></li>
-								<li><a href="https://www.ecum.uminho.pt/pt">Escola de Ciências</a></li>
-								<li><a href="http://www.math.uminho.pt/">Departamento de Matemática</a></li>
-								<li><a href="https://mate.unipv.it/~salvaran/IMEDiL/project.html">Projeto IMEDiL – Inclusive Mathematics Education based on Digital Learning | 2021-1-FR01-KA220-HED-000023486</a></li>
+								<li><a href="https://www.uminho.pt/PT">University of Minho</a></li>
+								<li><a href="https://www.ecum.uminho.pt/pt">School of Sciences</a></li>
+								<li><a href="http://www.math.uminho.pt/">Department of Mathematics</a></li>
+								<li><a href="https://mate.unipv.it/~salvaran/IMEDiL/project.html">Projeto IMEDiL - Inclusive Mathematics Education based on Digital Learning | 2021-1-FR01-KA220-HED-000023486</a></li>
 							</ul>
 						</section>
 					</div>
 				</div>
 
-					<!-- Icons -->
-					<div style="display: flex; justify-content: center; margin-left: 550px;">
-						<table>
-							<tr>
-								<td>
-									<a href='http://www.uminho.pt/default.aspx' target="_blank">
-										<img src="static/images/escolas/um.gif"
-										alt="Universidade do Minho" style="width: 70px;">
-									</a>
-									<a target="_blank" href='http://www.ecum.uminho.pt'>
-										<img src="static/images/escolas/220.gif"
-										alt="Escola de Ciências" style="width: 70px;">
-									</a>
-								</td>
-								<td>
-									<a href='https://erasmus-plus.ec.europa.eu/' target="_blank">
-										<img src="static/images/erasmus.png" alt=""
-										style="width: 232px;">
-									</a>
-									<a href='https://agence.erasmusplus.fr/en/' target="_blank">
-										<img src="static/images/erasmusfrance.png" alt=""
-										style="width: 200px; margin-right: 500px;">
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<p style="font-size: smaller; margin: 0;">
-										<a href='http://www.uminho.pt/default.aspx'>Universidade do Minho</a>
-										<br>
-										<a href='http://www.math.uminho.pt/'>Departamento de Matemática</a>
-									</p>
-								</td>
-							</tr>
-						</table>
-					</div>
+				<!-- Icons -->
+				<div style="display: flex; justify-content: center; margin-left: 550px;">
+					<table>
+						<tr>
+							<td>
+								<a href='http://www.uminho.pt/default.aspx' target="_blank">
+									<img src="static/images/escolas/um.png"
+									alt="University of Minho" style="width: 70px;">
+								</a>
+								<a target="_blank" href='http://www.ecum.uminho.pt'>
+									<img src="static/images/escolas/220.png"
+									alt="School of Sciences" style="width: 70px;">
+								</a>
+							</td>
+							<td>
+								<a href='https://erasmus-plus.ec.europa.eu/' target="_blank">
+									<img src="static/images/erasmus.png" alt=""
+									style="width: 232px;">
+								</a>
+								<a href='https://agence.erasmusplus.fr/en/' target="_blank">
+									<img src="static/images/erasmusfrance.png" alt=""
+									style="width: 200px; margin-right: 500px;">
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<p style="font-size: smaller; margin: 0;">
+									<a href='http://www.uminho.pt/default.aspx'>University of Minho</a>
+									<br>
+									<a href='http://www.math.uminho.pt/'>Department of Mathematics</a>
+								</p>
+							</td>
+						</tr>
+					</table>
+				</div>
 
 					<!-- Copyright -->
 					<div class="copyright centered">
