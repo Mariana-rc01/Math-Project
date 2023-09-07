@@ -1,3 +1,5 @@
+//Developed by Mariana Rocha (https://github.com/Mariana-rc01)
+
 function createReferenceAxes() {
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);

@@ -1,3 +1,5 @@
+//Developed by Mariana Rocha (https://github.com/Mariana-rc01)
+
 // Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a, b, c, d, e e g
 function f(x, y, a, b, c, d, e, g) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + g;

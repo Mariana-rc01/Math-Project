@@ -1,3 +1,5 @@
+//Developed by Mariana Rocha (https://github.com/Mariana-rc01)
+
 // Função f(x, y)
 function f(x, y, a, b, c, d, e, g) {
 	return a * x ** 2 + b * y ** 2 + c * x * y + d * x + e * y + g;
