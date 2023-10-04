@@ -274,7 +274,7 @@ function createReferenceAxes() {
 			return pointOnSphere;
 		}
 
-		document.getElementById("coordinates").innerText = `P ≡ (ρ,θ,φ) ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
+		document.getElementById("coordinates").innerHTML = `P ≡ (<span style="color: blue;">ρ</span>,<span style="color: green;">θ</span>,<span style="color: red;">φ</span>) ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 
 		renderer.render(scene, camera);
 	}

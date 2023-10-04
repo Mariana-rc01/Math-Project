@@ -120,6 +120,10 @@
 			.input-container input:last-child {
 				margin-right: 0;
 			}
+
+			.paragraphs p {
+				margin: 0.5;
+			}
 		</style>
 	</head>
 	<body>
@@ -138,9 +142,8 @@
 								<li>
 									<a href="analise.html">Analysis</a>
 									<ul>
-										<li><a href="analise1.html">Contour Line</a></li>
+										<li><a href="analise1.html">Level Curves</a></li>
 										<li><a href="analise3.html">Gradient</a></li>
-										<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 										<li class="current"><a href="analise5.html">Riemann sums</a></li>
 										<li><a href="analise6.html">Spherical Coordinates</a></li>
 									</ul>
@@ -162,11 +165,10 @@
 
 									<!-- Sidebar -->
 										<section>
-											<h3>Problems</h3>
+											<h3>Subjects</h3>
 											<ul class="links">
-												<li><a href="analise1.html">Contour Line</a></li>
+												<li><a href="analise1.html">Level Curves</a></li>
 												<li><a href="analise3.html">Gradient</a></li>
-												<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 												<li><a href="analise5.html">Riemann sums</a></li>
 												<li><a href="analise6.html">Spherical Coordinates</a></li>
 											</ul>
@@ -182,10 +184,17 @@
 									<article>
 										<header>
 											<h2>Riemann sums</h2>
-											<p>Problem statement.</p>
 										</header>
 
-										<p>Brief explanation.</p>
+										<div class="paragraphs">
+											<p>The application returns a representation of Riemann sums for a polynomial
+												 function f of two variables (x, y) with a degree less or equal than two.
+												  The user should input the values of the polynomial coefficients a, b, c,
+													 d, e, and g, and the rectangular domain of the representation
+													  [xi, xs] x [yi, ys].</p>
+
+												<p>Use the horizontal bar to specify the number of parcels in the Riemann sum.</p>
+										</div>
 
 									</article>
 
@@ -212,7 +221,7 @@
 											<input type="number" id="g" step="0.1" value="6" onchange="checkValue(this)">
 										</div>
 									</form>
-									<h1>D_f=[xi,xf]x[yi,yf]</h1>
+									<h1>Region=[xi,xf]x[yi,yf]</h1>
 									<!-- Formulário para entrada de valores de a, b, c, d, e, h -->
 									<form oninput="updateGraph()">
 										<div class="input-container">

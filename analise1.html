@@ -194,9 +194,8 @@
 								<li>
 									<a href="analise.html">Analysis</a>
 									<ul>
-										<li class="current"><a href="analise1.html">Contour Line</a></li>
+										<li class="current"><a href="analise1.html">Level Curves</a></li>
 										<li><a href="analise3.html">Gradient</a></li>
-										<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 										<li><a href="analise5.html">Riemann sums</a></li>
 										<li><a href="analise6.html">Spherical Coordinates</a></li>
 									</ul>
@@ -218,11 +217,10 @@
 
 									<!-- Sidebar -->
 										<section>
-											<h3>Problems</h3>
+											<h3>Subjects</h3>
 											<ul class="links">
-												<li><a href="analise1.html">Contour Line</a></li>
+												<li><a href="analise1.html">Level Curves</a></li>
 												<li><a href="analise3.html">Gradient</a></li>
-												<li><a href="analise4.html">Method of Lagrange multipliers</a></li>
 												<li><a href="analise5.html">Riemann sums</a></li>
 												<li><a href="analise6.html">Spherical Coordinates</a></li>
 											</ul>
@@ -237,11 +235,14 @@
 
 										<article>
 											<header>
-												<h2>Contour Line</h2>
-												<p>Problem statement.</p>
+												<h2>Level Curves</h2>
 											</header>
 
-											<p>Brief explanation.</p>
+											<p>The application returns the graph and the representation of level curves
+												 and contour maps for a polynomial function, g, of two variables (x, y),
+												  with a degree less than three. The user inputs the polynomial coefficients
+													 a, b, c, d, e, f, and the level of the curve to be represented.
+													  Users can choose between representing a single level curve or multiple ones.</p>
 
 										</article>
 
@@ -278,7 +279,7 @@
 														checked
 													/>
 													<span class="checkmark"></span>
-													<label for="single-curve">Just a contour</label>
+													<label for="single-curve">Just a level curve</label>
 												</div>
 												<div class="radio-option" onclick="selectOption('many-curves')">
 													<input
@@ -293,7 +294,7 @@
 											</div>
 										<div class="slider">
 											<div class="input-field">
-													<label for="level">Contour Line Value:</label>
+													<label for="level">Level Curve Value:</label>
 														<input
 																type="range"
 																id="level"
@@ -317,7 +318,7 @@
 										</div>
 										<div class="slider">
 											<div class="input-field">
-												<label for="curves">Number of Contour Lines:</label>
+												<label for="curves">Number of Level Curves:</label>
 													<input
 															type="range"
 															id="curves"
