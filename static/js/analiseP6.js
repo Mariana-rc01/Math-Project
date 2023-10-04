@@ -181,13 +181,13 @@ function createReferenceAxes() {
 		if (piFraction === "0.00") {
 			return "0";
 		} else if (piFraction === "1.00") {
-			return "π";
+				return `<img src="static/images/problems/pi.png" alt="pi" style="display: inline-block; vertical-align: middle;>`;
 		} else if (piFraction === "0.50") {
-			return `π/2`;
+				return `<img src="static/images/problems/pi.png" alt="pi" style="display: inline-block; vertical-align: middle;">/2`;
 		} else if (piFraction === "0.25") {
-			return `π/4`;
+				return `<img src="static/images/problems/pi.png" alt="pi" style="display: inline-block; vertical-align: middle;">/4`;
 		} else {
-			return `${piFraction}π`;
+				return `${piFraction}<img src="static/images/problems/pi.png" alt="pi" style="display: inline-block; vertical-align: middle;">`;
 		}
 	}
 
