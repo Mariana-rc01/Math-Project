@@ -274,8 +274,11 @@ function createReferenceAxes() {
 			return pointOnSphere;
 		}
 
-		document.getElementById("coordinates").innerHTML = `P ≡ (<span style="color: blue;">ρ</span>,<span style="color: green;">θ</span>,<span style="color: red;">φ</span>) ≡ (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
+		// Obtém a referência para o elemento #coordinates
+var coordinatesSpan = document.getElementById("coordinates");
 
+// Atualiza o conteúdo dentro do elemento #coordinates
+coordinatesSpan.innerHTML = ` (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 		renderer.render(scene, camera);
 	}
 

@@ -97,20 +97,6 @@ function updateGraph() {
 		var vector = [fx(pointX, pointY, a, b, c, d, e, h), fy(pointX, pointY, a, b, c, d, e, h)];
 
 		// Criação do ponto A no gráfico
-		var pointA = {
-			type: 'scatter3d',
-			mode: 'markers',
-			x: [pointY],
-			y: [pointX],
-			z: [pointZ],
-			marker: {
-				color: 'pink',
-				size: 6,
-			},
-			name:'A',
-		};
-
-		// Criação do ponto A no gráfico
 		var pointA1 = {
 			type: 'scatter3d',
 			mode: 'markers',
@@ -121,8 +107,23 @@ function updateGraph() {
 				color: 'magenta',
 				size: 6,
 			},
-			name:'A\'',
+			name:'A',
 		};
+
+		// Criação do ponto A no gráfico
+		var pointA = {
+			type: 'scatter3d',
+			mode: 'markers',
+			x: [pointY],
+			y: [pointX],
+			z: [pointZ],
+			marker: {
+				color: 'pink',
+				size: 6,
+			},
+			name:'f(w,z)',
+		};
+
 
 		// Criação do vetor para o ponto A1
 		var vectorTrace = {
@@ -139,7 +140,7 @@ function updateGraph() {
 				color: 'green', // Cor da linha do vetor
 				width: 2,
 			},
-			name: '∇f(A\')', // Nome da legenda do vetor
+			name: 'Gradient vector', // Nome da legenda do vetor
 		};
 
 		// Criação do plano de interseção no ponto A
@@ -169,8 +170,8 @@ function updateGraph() {
 				showscale: false,
 				name: 'f(x, y)',
 			},
-			pointA, // Adiciona o ponto A
 			pointA1, // Projeção do ponto A
+			pointA, // Adiciona o ponto A
 			intersectionPlaneAtPointA, // Adiciona o plano de interseção no ponto A
 			pointsOnZPlane,
 			vectorTrace,
