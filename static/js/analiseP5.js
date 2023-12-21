@@ -1,18 +1,18 @@
 //Developed by Mariana Rocha (https://github.com/Mariana-rc01)
 
-// Função f(x, y)
+// Function f(x, y)
 function f(x, y, a, b, c, d, e, g) {
 	return a * x ** 2 + b * y ** 2 + c * x * y + d * x + e * y + g;
 }
 
-// Número inicial de paralelepípedos
+// Initial number of parallelepipeds
 let numParallelepipeds = 30;
 
-let soma = 0;
+let sum = 0;
 
-// Função para criar os dados para o Plotly
+// Function to create data for Plotly
 function createData() {
-	soma = 0;
+	sum = 0;
 	const a = parseFloat(document.getElementById('a').value) || 0;
 	const b = parseFloat(document.getElementById('b').value) || 0;
 	const c = parseFloat(document.getElementById('c').value) || 0;
@@ -61,7 +61,7 @@ function createData() {
 			const zBase = 0;
 
 			const volume = zTop * Math.abs(x1 - x0) * Math.abs(y1 - y0);
-			soma += volume;
+			sum += volume;
 
 			vertices[0] = [x0, y0, zTop];
 			vertices[1] = [x1, y0, zTop];
@@ -116,9 +116,9 @@ function updateGraph() {
 
 	Plotly.newPlot(plotDiv, data, layout);
 
-	// Atualiza o valor da soma
-	const somaValue = document.getElementById('soma-value');
-	somaValue.textContent = soma.toFixed(2);
+	// Update the value of sum
+	const sumValue = document.getElementById('sum-value');
+	sumValue.textContent = sum.toFixed(2);
 
 }
 
@@ -135,7 +135,7 @@ function onSlideChange() {
 	const slider = document.getElementById('level');
 	numParallelepipeds = parseFloat(slider.value) || 0;
 	document.getElementById('level-value').value = numParallelepipeds;
-	soma = 0;
+	sum = 0;
 	updateGraph();
 }
 

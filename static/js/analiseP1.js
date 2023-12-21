@@ -1,11 +1,11 @@
 //Developed by Mariana Rocha (https://github.com/Mariana-rc01)
 
-// Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a, b, c, d, e e f
+// Function to calculate the values of z (f(x, y)) based on the values of x, y, a, b, c, d, e, and f
 function g(x, y, a, b, c, d, e, f) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + f;
 }
 
-// Função para calcular as curvas de nível com base nos valores de x, y, a, b, c, d, e e f
+// Function to calculate contour levels based on the values of x, y, a, b, c, d, e, and f
 function contourLevels(x, y, a, b, c, d, e, f) {
 		var Z = [];
 		for (var i = 0; i < x.length; i++) {
@@ -18,7 +18,7 @@ function contourLevels(x, y, a, b, c, d, e, f) {
 		return Z;
 }
 
-// Função para criar o plano de curvas de nível no primeiro gráfico 3D
+// Function to create the contour plane in the first 3D plot
 function createContourPlane(x, y, a, b, c, d, e, f, level) {
 		var Z = contourLevels(x, y, a, b, c, d, e, f);
 		var Z_masked = Z.map((row) => row.map((val) => (val >= level ? level : NaN)));
@@ -35,7 +35,7 @@ function createContourPlane(x, y, a, b, c, d, e, f, level) {
 		};
 }
 
-// Função para criar os cortes horizontais nas posições das curvas de nível no gráfico 2D
+// Function to create horizontal cuts at the positions of contour lines in the 2D plot
 function createCuts(x, y, a, b, c_values, c, d, e, f) {
 		var cuts = [];
 		var Z = contourLevels(x, y, a, b, c, d, e, f);
@@ -54,7 +54,7 @@ function createCuts(x, y, a, b, c_values, c, d, e, f) {
 		return cuts;
 }
 
-// Função para criar o corte único no gráfico 2D
+// Function to create a single cut in the 2D plot
 function createSingleCut(x, y, a, b, c, d, e, f, level) {
 	var Z = contourLevels(x, y, a, b, c, d, e, f);
 	var trace = {
@@ -69,27 +69,27 @@ function createSingleCut(x, y, a, b, c, d, e, f, level) {
 	return trace;
 }
 
-// Função para atualizar os gráficos com base nos valores de a, b, c, d, e, f e quantidade de curvas de nível ou valor da curva de nível
+// Function to update the plots based on the values of a, b, c, d, e, f, and the number of contour lines or the level of the contour line
 function updateGraph() {
 		// Check the selected option (apenas uma curva or muitas curvas)
 		var singleCurveOption = document.getElementById('single-curve');
 		var isSingleCurveOption = singleCurveOption.checked;
 
-		// Obter os valores de a, b, e quantidade de curvas de nível ou valor da curva de nível do formulário
-		var a = parseFloat(document.getElementById('a').value) || 0; // Valor padrão de 1 para 'a'
-		var b = parseFloat(document.getElementById('b').value) || 0; // Valor padrão de 1 para 'b'
-		var c = parseFloat(document.getElementById('c').value) || 0; // Valor padrão de 0 para 'c'
-		var d = parseFloat(document.getElementById('d').value) || 0; // Valor padrão de 0 para 'd'
-		var e = parseFloat(document.getElementById('e').value) || 0; // Valor padrão de 0 para 'e'
-		var f = parseFloat(document.getElementById('f').value) || 0; // Valor padrão de 0 para 'f'
-		var curves = parseInt(document.getElementById('curves-value').value); // Valor padrão de 1 para quantidade de curvas de nível se a caixa estiver vazia
-		var level = parseFloat(document.getElementById('level-value').value); // Valor da curva de nível para a opção de uma curva
+		// Get the values of a, b, and the number of contour lines or the level of the contour line from the form
+		var a = parseFloat(document.getElementById('a').value) || 0; // Default value of 0 for 'a'
+		var b = parseFloat(document.getElementById('b').value) || 0; // Default value of 0 for 'b'
+		var c = parseFloat(document.getElementById('c').value) || 0; // Default value of 0 for 'c'
+		var d = parseFloat(document.getElementById('d').value) || 0; // Default value of 0 for 'd'
+		var e = parseFloat(document.getElementById('e').value) || 0; // Default value of 0 for 'e'
+		var f = parseFloat(document.getElementById('f').value) || 0; // Default value of 0 for 'f'
+		var curves = parseInt(document.getElementById('curves-value').value); // Default value of 1 for the number of contour lines if the box is empty
+		var level = parseFloat(document.getElementById('level-value').value); // Contour line value for the single curve option
 
-		// Atualizar o valor da quantidade de curvas de nível ou valor da curva de nível na barra de deslizar
+		// Update the value of the number of contour lines or the level of the contour line on the slider
 		document.getElementById('curves').value = curves;
 		document.getElementById('level').value = level;
 
-		// Intervalo de valores para x e y
+		// Range of values for x and y
 		var x = [],
 				y = [];
 		for (var i = -5; i <= 5; i += 0.1) {
@@ -115,13 +115,13 @@ function updateGraph() {
 				}
 		}
 
-		// Criação dos planos de curvas de nível
+		// Creation of contour planes
 		var planes = [];
 		for (var level of c_values) {
 				planes.push(createContourPlane(x, y, a, b, c, d, e, f, level));
 		}
 
-		// Criação dos dados do gráfico 3D
+		// Creation of 3D plot data
 		var data3d = [
 				{
 						type: 'surface',
@@ -133,7 +133,7 @@ function updateGraph() {
 				},
 		].concat(planes);
 
-		// Definição das opções de layout dos gráficos
+		// Layout options for 3D plots
 		var layout3d = {
 				title: '3D Interactive Plot',
 				xaxis_title: 'Y',
@@ -147,30 +147,29 @@ function updateGraph() {
 				},
 		};
 
-		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
-		// Criação dos dados de curvas de nível para o gráfico 2D (vista de cima)
+		// Layout options for 3D plots
 		var dataContour = [
 			{
 					type: 'contour',
-					x: y, // Use os mesmos valores de y do gráfico 3D
-					y: x, // Use os mesmos valores de x do gráfico 3D
-					z: Z, // Use os mesmos valores de Z do gráfico 3D
+					x: y, // Use the same y values as the 3D plot
+					y: x, // Use the same x values as the 3D plot
+					z: Z, // Use the same Z values as the 3D plot
 					colorscale: 'Viridis', // Use a colorscale Viridis para o degradê de cores
 					showscale: false,
 					hoverinfo: 'none',
 					contours: {
-						showlines: false, // Não mostrar as linhas entre as cores
+						showlines: false, // Do not show lines between colors
 				},
 			},
 		];
 
-		// Adicione linhas de contorno individuais para cada nível
+		// Add individual contour lines for each level
 		for (var level of c_values) {
 			var contourLines = {
 					type: 'contour',
-					x: y, // Use os mesmos valores de y do gráfico 3D
-					y: x, // Use os mesmos valores de x do gráfico 3D
-					z: contourLevels(x, y, a, b, c, d, e, f), // Use a função de cálculo para obter Z
+					x: y, // Use the same y values as the 3D plot
+					y: x, // Use the same x values as the 3D plot
+					z: contourLevels(x, y, a, b, c, d, e, f), // Use the calculation function to get Z
 					colorscale: 'Viridis',
 					showscale: false,
 					hoverinfo: 'none',
@@ -205,12 +204,12 @@ function updateGraph() {
 				},
 		};
 
-		// Atualização dos gráficos
+		// Update the plots
 		Plotly.react('plotly-graph-3d', data3d, layout3d);
 		Plotly.react('plotly-graph-contour', dataContour, layoutContour);
 }
 
-// Atualizar valor da quantidade de curvas de nível ou valor da curva de nível ao mover as barras de deslizar
+// Update the value of the number of contour lines or the level of the contour line when moving the sliders
 function updateSliderValue() {
 	var curvesOption = document.querySelector('input[name="curves-option"]:checked');
 	var isSingleCurveOption = curvesOption.value === 'single';
@@ -229,14 +228,14 @@ function updateSliderValue() {
 	updateGraph();
 }
 
-
+// Function to select an option and update the graph
 function selectOption(optionId) {
 	document.getElementById(optionId).checked = true;
 	toggleCurveOptions();
 	updateGraph();
 }
 
-// Função para alternar entre a opção de "Apenas uma curva de nível" e "Muitas curvas de nível"
+// Function to toggle between the "Single Contour" and "Multiple Contours" options
 function toggleCurveOptions() {
 	var singleCurveOption = document.getElementById('single-curve');
 	var levelSlider = document.getElementById('level');
@@ -260,6 +259,7 @@ function toggleCurveOptions() {
 	}
 }
 
+// Function to check if the input value is empty and update the graph
 function checkValue(input) {
 	if (input.value === '') {
 			input.value = 0;
@@ -267,7 +267,7 @@ function checkValue(input) {
 	updateGraph();
 }
 
-// Atualizar os gráficos inicialmente
+// Update the graphs initially
 updateGraph();
 
 document.getElementById('single-curve').checked = true;

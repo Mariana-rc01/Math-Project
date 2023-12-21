@@ -1,6 +1,7 @@
 //Developed by Mariana Rocha (https://github.com/Mariana-rc01)
 
 function createReferenceAxes() {
+	// Set up the scene, camera, and renderer
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
 	camera.position.set(1, 1, 5);
@@ -11,47 +12,44 @@ function createReferenceAxes() {
 	renderer.setSize(900, 700);
 	document.getElementById("graphDiv").appendChild(renderer.domElement);
 
-	// Criar os objetos para cada eixo
+	// Create objects for each axis
 	const xAxis = new THREE.Object3D();
 	const yAxis = new THREE.Object3D();
 	const zAxis = new THREE.Object3D();
 
-	// Adicionar os objetos dos eixos à cena
-	scene.add(zAxis); // Z-Axis antes do X-Axis
+	// Add axis objects to the scene
+	scene.add(zAxis); // Z-Axis before X-Axis
 	scene.add(yAxis);
-	scene.add(xAxis); // X-Axis depois do Z-Axis
+	scene.add(xAxis); // X-Axis after Z-Axis
 
-	const xAxisHelper = new THREE.AxesHelper(1); // Comprimento do eixo x
-	const yAxisHelper = new THREE.AxesHelper(1); // Comprimento do eixo y
-	const zAxisHelper = new THREE.AxesHelper(1); // Comprimento do eixo z
+	// Create axis helpers
+	const xAxisHelper = new THREE.AxesHelper(1);
+	const yAxisHelper = new THREE.AxesHelper(1);
+	const zAxisHelper = new THREE.AxesHelper(1);
 
 	xAxisHelper.material.depthTest = false;
 	xAxisHelper.material.transparent = true;
 	xAxisHelper.material.opacity = 1;
-	xAxisHelper.material.color.set(0x000000); // Definir a cor dos eixos como preto
+	xAxisHelper.material.color.set(0x000000);
 	xAxis.add(xAxisHelper);
 
 	yAxisHelper.material.depthTest = false;
 	yAxisHelper.material.transparent = true;
 	yAxisHelper.material.opacity = 1;
-	yAxisHelper.material.color.set(0x000000); // Definir a cor dos eixos como preto
+	yAxisHelper.material.color.set(0x000000);
 	yAxis.add(yAxisHelper);
 
 	zAxisHelper.material.depthTest = false;
 	zAxisHelper.material.transparent = true;
 	zAxisHelper.material.opacity = 1;
-	zAxisHelper.material.color.set(0x000000); // Definir a cor dos eixos como preto
+	zAxisHelper.material.color.set(0x000000);
 	zAxis.add(zAxisHelper);
 
-	// Alterar comprimento do eixo x
-	xAxisHelper.scale.set(2, 1, 1); // Aumenta o comprimento do eixo x em 2 vezes
+	xAxisHelper.scale.set(2, 1, 1);
 
-	// Alterar comprimento do eixo y
-	yAxisHelper.scale.set(1, 2, 1); // Reduz o comprimento do eixo y pela metade
+	yAxisHelper.scale.set(1, 2, 1);
 
-	// Alterar comprimento do eixo z
-	zAxisHelper.scale.set(1, 1, 3.1); // Aumenta o comprimento do eixo z em 3 vezes
-
+	zAxisHelper.scale.set(1, 1, 3.1);
 
 	const originGeometry = new THREE.SphereGeometry(0.05);
 	const originMaterial = new THREE.MeshBasicMaterial({ color: "black" });
@@ -83,8 +81,8 @@ function createReferenceAxes() {
 			height: 0.02,
 		});
 		const xText = new THREE.Mesh(xTextGeometry, textMaterial);
-		xText.position.set(0, 0, 3); // Posição do texto X alterada
-		zAxis.add(xText); // Texto X adicionado ao Z-Axis
+		xText.position.set(0, 0, 3);
+		zAxis.add(xText);
 
 		const yTextGeometry = new THREE.TextGeometry("Y", {
 			font: font,
@@ -101,8 +99,8 @@ function createReferenceAxes() {
 			height: 0.02,
 		});
 		const zText = new THREE.Mesh(zTextGeometry, textMaterial);
-		zText.position.set(0, 2, 0); // Posição do texto Z alterada
-		xAxis.add(zText); // Texto Z adicionado ao X-Axis
+		zText.position.set(0, 2, 0);
+		xAxis.add(zText);
 	});
 
 	const controls = {
@@ -203,18 +201,18 @@ function createReferenceAxes() {
 		}
 		else {
 			theta = 2 * Math.PI - Math.acos(controls.z / value);
-			// Troquei X por Z e Y por X
+			// Swap X and Z, and Y and X
 		}
 		phi = 0;
 		if (controls.y === 0 && controls.x === 0 && controls.z === 0) {
 			phi = 0;
 		}
 		else {
-			phi = Math.acos(controls.y / ro); // Troquei Z por Y
+			phi = Math.acos(controls.y / ro); // Swap Z by Y
 		}
 
 		const maxRadius = 1.8;
-		const scaleFactor = Math.min(1, maxRadius / ro); // Escala para limitar o tamanho
+		const scaleFactor = Math.min(1, maxRadius / ro);
 
 		const xScaled = controls.x * scaleFactor;
 		const yScaled = controls.y * scaleFactor;
@@ -228,15 +226,15 @@ function createReferenceAxes() {
 		const roundedTheta = formatFraction(theta);
 		const roundedPhi = formatFraction(phi);
 
-		// Atualizar geometria das linhas Theta
+		// Update geometry of theta lines
 		thetaLine.geometry.setFromPoints([
 			new THREE.Vector3(0, 0, 0),
 			new THREE.Vector3(xScaled, 0, zScaled),
 		]);
 
-		// Atualizar posição da linha curva de theta
-		thetaCurvePoints.length = 0; // Limpar os pontos anteriores
-		thetaCurvePoints.push(new THREE.Vector3(0, 0, 0)); // Adicionar ponto inicial
+		// Update position of theta curve line
+		thetaCurvePoints.length = 0;
+		thetaCurvePoints.push(new THREE.Vector3(0, 0, 0));
 		const escala = Math.sqrt(zScaled ** 2 + xScaled ** 2);
 		for (let angle = 0; angle <= theta; angle += 0.01) {
 			const x = Math.cos(angle) * escala;
@@ -245,13 +243,13 @@ function createReferenceAxes() {
 		}
 		thetaCurve.geometry.setFromPoints(thetaCurvePoints);
 
-		// Curva de phi
-		phiCurvePoints.length = 0; // Limpar os pontos anteriores
+		// Phi curve
+		phiCurvePoints.length = 0;
 
-		const p0 = new THREE.Vector3(xScaled, yScaled, zScaled); // Ponto P
-		const poleN = new THREE.Vector3(0, ro <= maxRadius ? ro : maxRadius, 0); // Polo norte
+		const p0 = new THREE.Vector3(xScaled, yScaled, zScaled); // Point P
+		const poleN = new THREE.Vector3(0, ro <= maxRadius ? ro : maxRadius, 0);
 
-		const segments = 100; // Número de segmentos para a curva
+		const segments = 100; // Number of segments for the curve
 
 		for (let i = 0; i <= segments; i++) {
 			const t = i / segments;
@@ -274,10 +272,9 @@ function createReferenceAxes() {
 			return pointOnSphere;
 		}
 
-		// Obtém a referência para o elemento #coordinates
 var coordinatesSpan = document.getElementById("coordinates");
 
-// Atualiza o conteúdo dentro do elemento #coordinates
+// Update content within the #coordinates element
 coordinatesSpan.innerHTML = ` (${roundedRo}, ${roundedTheta}, ${roundedPhi})`;
 		renderer.render(scene, camera);
 	}

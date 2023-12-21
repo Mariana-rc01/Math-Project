@@ -1,21 +1,21 @@
 //Developed by Mariana Rocha (https://github.com/Mariana-rc01)
 
-// Função para calcular os valores de z (f(x, y)) com base nos valores de x, y, a, b, c, d, e e h
+// Function to calculate the values of z (f(x, y)) based on the values of x, y, a, b, c, d, e, and h
 function f(x, y, a, b, c, d, e, h) {
 	return a * x**2 + b * y**2 + c * x * y + d * x + e * y + h;
 }
 
-// Função para calcular a derivada parcial de f(x,y)
+// Function to calculate the partial derivative of f(x, y) with respect to x
 function dx(x, y, a, _, c, d, _, _) {
 	return 2 * a * x + c * y + d;
 }
 
-// Função para calcular a derivada parcial de f(x,y)
+// Function to calculate the partial derivative of f(x, y) with respect to y
 function dy(x, y, _, b, c, _, e, _) {
 	return 2 * b * y + c * x + e;
 }
 
-// Função para calcular os valores de z para as curvas de nível
+// Function to calculate the values of z for the contour lines
 function contourLevels(x, y, a, b, c, d, e, h) {
 	var Z = [];
 	for (var i = 0; i < x.length; i++) {
@@ -28,11 +28,11 @@ function contourLevels(x, y, a, b, c, d, e, h) {
 	return Z;
 }
 
-// Função para encontrar a interseção dos pontos com z = 0
+// Function to find the intersection of points with z = 0
 function createPointsOnZPlane(a, b, c, d, e, h) {
 	var points = [];
 
-	// Intervalo de valores para x e y
+	// Interval of values for x and y
 	var step = 0.0005;
 	for (var x = -5; x <= 5; x += step) {
 		for (var y = -5; y <= 5; y += step) {
@@ -57,32 +57,32 @@ function createPointsOnZPlane(a, b, c, d, e, h) {
 	};
 }
 
-// Declare a variável data3d fora do evento de clique Plotly
+// Declare the variable data3d outside the Plotly click event
 var data3d = [];
 var layout3d;
 
-// Declare as variáveis clickedX e clickedY fora da função updateGraph
+// Declare the variables clickedX and clickedY outside the updateGraph function
 var clickedX, clickedY;
 
-// Adicione um evento de clique ao gráfico Plotly
+// Add a click event to the Plotly graph
 var plotlyGraph = document.getElementById('plotly-graph-3d');
 Plotly.newPlot(plotlyGraph, data3d, layout3d);
 
 function updateGraph() {
-	// Obter os valores de a, b, e quantidade de curvas de nível ou valor da curva de nível do formulário
-	var a = parseFloat(document.getElementById('a').value) || 0; // Valor padrão de 0 para 'a'
-	var b = parseFloat(document.getElementById('b').value) || 0; // Valor padrão de 0 para 'b'
-	var c = parseFloat(document.getElementById('c').value) || 0; // Valor padrão de 0 para 'c'
-	var d = parseFloat(document.getElementById('d').value) || 0; // Valor padrão de 0 para 'd'
-	var e = parseFloat(document.getElementById('e').value) || 0; // Valor padrão de 0 para 'e'
-	var h = parseFloat(document.getElementById('h').value) || 0; // Valor padrão de 0 para 'h'
+	// Get the values of a, b, and the number of contour lines or the level of the contour line from the form
+	var a = parseFloat(document.getElementById('a').value) || 0; // Default value of 0 for 'a'
+	var b = parseFloat(document.getElementById('b').value) || 0; // Default value of 0 for 'b'
+	var c = parseFloat(document.getElementById('c').value) || 0; // Default value of 0 for 'c'
+	var d = parseFloat(document.getElementById('d').value) || 0; // Default value of 0 for 'd'
+	var e = parseFloat(document.getElementById('e').value) || 0; // Default value of 0 for 'e'
+	var h = parseFloat(document.getElementById('h').value) || 0; // Default value of 0 for 'f'
 
-	var i = parseFloat(document.getElementById('i').value) || 0; // Valor padrão de 0 para 'i'
-	var j = parseFloat(document.getElementById('j').value) || 0; // Valor padrão de 0 para 'j'
-	var k = parseFloat(document.getElementById('k').value) || 0; // Valor padrão de 0 para 'k'
-	var l = parseFloat(document.getElementById('l').value) || 0; // Valor padrão de 0 para 'l'
-	var m = parseFloat(document.getElementById('m').value) || 0; // Valor padrão de 0 para 'm'
-	var n = parseFloat(document.getElementById('n').value) || 0; // Valor padrão de 0 para 'n'
+	var i = parseFloat(document.getElementById('i').value) || 0; // Default value of 0 for 'i'
+	var j = parseFloat(document.getElementById('j').value) || 0; // Default value of 0 for 'j'
+	var k = parseFloat(document.getElementById('k').value) || 0; // Default value of 0 for 'k'
+	var l = parseFloat(document.getElementById('l').value) || 0; // Default value of 0 for 'l'
+	var m = parseFloat(document.getElementById('m').value) || 0; // Default value of 0 for 'm'
+	var n = parseFloat(document.getElementById('n').value) || 0; // Default value of 0 for 'n'
 
 	var x = [],
 			y = [];
@@ -108,7 +108,7 @@ function updateGraph() {
 		pointsOnZPlane,
 	];
 
-	// Definição das opções de layout dos gráficos
+	// Definition of layout options for the graphs
 	layout3d = {
 		title: 'Interactive 3D Chart',
 		xaxis_title: 'Y',
@@ -129,32 +129,32 @@ function updateGraph() {
 		},
 	};
 
-	// Atualização dos gráficos
+	// Update the graphs
 	Plotly.react('plotly-graph-3d', data3d, layout3d);
 }
 
-// Função para adicionar novos traços ao gráfico
+// Function to add new traces to the graph
 function addNewTraces(newTraces) {
-	// Combine os traços existentes com os novos traços
+	// Combine existing traces with new traces
 	data3d = data3d.concat(newTraces);
-	// Coloque o código que está causando o erro aqui
+	// Put the code causing the error here
 	Plotly.newPlot('plotly-graph-3d', data3d, layout3d);
 }
 
-// Declare a variável plotlyData para armazenar os elementos adicionados ao gráfico
+// Declare the plotlyData variable to store elements added to the graph
 var plotlyData = [];
 
-// Adicione um evento de clique ao gráfico Plotly
+// Add a click event to the Plotly graph
 plotlyGraph.on('plotly_click', function(data) {
 	if (data.points.length > 0) {
 		var clickedPoint = data.points[0];
 		if (clickedPoint && clickedPoint.x !== undefined && clickedPoint.y !== undefined) {
-			clickedX = parseFloat(clickedPoint.y.toFixed(4)); // Coordenada x do ponto clicado
-			clickedY = parseFloat(clickedPoint.x.toFixed(4)); // Coordenada y do ponto clicado
+			clickedX = parseFloat(clickedPoint.y.toFixed(4)); // X coordinate of the clicked point
+			clickedY = parseFloat(clickedPoint.x.toFixed(4)); // Y coordinate of the clicked point
 
 			console.log('Coordenadas do ponto clicado - X: ' + clickedX + ', Y: ' + clickedY);
 
-			// Verifique se o ponto já existe no array
+			// Check if the point already exists in the array
 			var pointAlreadyExists = false;
 			for (var i = 0; i < plotlyData.length; i++) {
 				if (plotlyData[i].type === 'scatter3d' && plotlyData[i].name === 'P') {
@@ -169,21 +169,21 @@ plotlyGraph.on('plotly_click', function(data) {
 
 			if (!pointAlreadyExists) {
 				clearTraces();
-			// Adicione os novos elementos ao gráfico
+			// Add new elements to the graph
 			addPointAndVectors(clickedX, clickedY);
 			}
 		}
 	}
 });
 
-// Função para limpar os traços existentes
+// Function to clear existing traces
 function clearTraces() {
 	data3d = data3d.filter(trace => trace.name !== 'P' && trace.name !== 'f(P)' && trace.name !== '∇f(P)' && trace.name !== '∇g(P)');
 	Plotly.newPlot('plotly-graph-3d', data3d, layout3d);
 }
 
 function addPointAndVectors(pointX, pointY) {
-	// Obtenha os valores de a, b, c, d, e, h, i, j, k, l, m e n
+	// Get the values of a, b, c, d, e, h, i, j, k, l, m, and n
 	var a = parseFloat(document.getElementById('a').value) || 0;
 	var b = parseFloat(document.getElementById('b').value) || 0;
 	var c = parseFloat(document.getElementById('c').value) || 0;
@@ -202,7 +202,7 @@ function addPointAndVectors(pointX, pointY) {
 
 	console.log('Coordenadas do ponto clicado - X: ' + pointX + ', Y: ' + pointY + pointZ);
 
-	// Crie os novos elementos do gráfico
+	// Create new graph elements
 	var pointP = {
 		type: 'scatter3d',
 		mode: 'markers',
@@ -266,7 +266,7 @@ function addPointAndVectors(pointX, pointY) {
 		name: '∇g(P)',
 	};
 
-	// Crie os novos elementos do gráfico
+	// Create new graph elements
 	var newTraces = [pointP, pointfP, vectorTracef, vectorTraceg];
 
 	addNewTraces(newTraces);
@@ -279,23 +279,22 @@ function checkValue(input) {
 	updateGraph();
 }
 
-// Ouvinte de evento para o botão de redefinição
+// Event listener for the reset button
 document.getElementById('resetButton').addEventListener('click', function() {
-	// Carrega novamente o arquivo JavaScript
+	// Reload the JavaScript file
 	var scriptElement = document.createElement('script');
 	scriptElement.src = 'static/js/analiseP4.js';
 
-	// Remove o script anterior (opcional)
+	// Remove the previous script (optional)
 	var oldScript = document.querySelector('script[src="static/js/analiseP4.js"]');
 	if (oldScript) {
 			oldScript.remove();
 	}
 
-	// Adiciona o novo script ao corpo da página
 	document.body.appendChild(scriptElement);
 });
 
 
-// Atualizar os gráficos inicialmente
+// Update the graphs initially
 updateGraph();
 
