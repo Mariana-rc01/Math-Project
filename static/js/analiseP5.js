@@ -117,7 +117,7 @@ function updateGraph() {
 	Plotly.newPlot(plotDiv, data, layout);
 
 	// Update the value of sum
-	const sumValue = document.getElementById('sum-value');
+	const sumValue = document.getElementById('soma-value');
 	sumValue.textContent = sum.toFixed(2);
 
 }
@@ -140,3 +140,4 @@ function onSlideChange() {
 }
 
 updateGraph();
+
